@@ -6,7 +6,7 @@ import "./index.css";
 import { theme } from "./theme";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>
+  <React.StrictMode>
+    <div>kkk</div>
+  </React.StrictMode>
 );
