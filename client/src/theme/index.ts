@@ -1,11 +1,16 @@
 import { createTheme } from "@mui/material";
-import { red, indigo, cyan, blue, purple } from "@mui/material/colors";
 
 export const theme = createTheme({
   palette: {
-    primary: {
-      main: purple[900],
+    mode: "dark",
+    background: {
+      default: "#333333",
+      paper: "#0B090C",
     },
+  },
+
+  typography: {
+    fontFamily: ["Noto Sans"].join(""),
   },
 
   components: {
@@ -13,6 +18,32 @@ export const theme = createTheme({
       defaultProps: {
         disableElevation: true,
         disableRipple: true,
+      },
+
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          borderRadius: "8px",
+        },
+      },
+    },
+
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+        },
+      },
+    },
+
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "#3C393F",
+            borderRadius: "8px",
+          },
+        },
       },
     },
   },

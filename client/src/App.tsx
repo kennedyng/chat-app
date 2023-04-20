@@ -2,13 +2,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthLayout from "./layout/auth";
 import RootLayout from "./layout/root";
 import DetailsPage from "./pages/details";
-import GenderPage from "./pages/gender";
+import ProfilePage from "./pages/profile";
 import LoginPage from "./pages/login";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <div>Groupdddd Char</div>,
+      },
+    ],
   },
 
   {
@@ -21,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "gender",
-        element: <GenderPage />,
+        element: <ProfilePage />,
       },
       {
         path: "personal/details",

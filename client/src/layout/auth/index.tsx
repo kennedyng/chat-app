@@ -6,12 +6,6 @@ import { Outlet } from "react-router-dom";
 const AuthLayout = () => {
   const theme = useTheme();
 
-  const TopBox = styled(Box)(({ theme }) => ({
-    background: theme.palette.primary.main,
-    height: "50%",
-    width: "100%",
-  }));
-
   const ContentWrapper = styled(Box)(({ theme }) => ({
     position: "absolute",
     height: "100%",
@@ -23,18 +17,24 @@ const AuthLayout = () => {
 
   const FormWrapper = styled(Paper)(({ theme }) => ({
     borderRadius: "0.93rem",
+
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: theme.spacing(4),
-    width: 500,
+
+    padding: theme.spacing(8),
+    [theme.breakpoints.up("xs")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.up("md")]: {
+      width: 500,
+    },
   }));
 
   return (
     <Grid container sx={{ height: "100vh" }}>
-      <TopBox />
       <ContentWrapper>
-        <FormWrapper>
+        <FormWrapper elevation={10}>
           <Outlet />
         </FormWrapper>
       </ContentWrapper>
