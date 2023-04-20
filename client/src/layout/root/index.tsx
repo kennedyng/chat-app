@@ -1,28 +1,28 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Paper } from "@mui/material";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import Nav from "../../components/nav";
 
 const RootLayout = () => {
   return (
-    <Grid container sx={{ height: "100vh" }}>
-      <Grid container item xs={3} sx={{ background: "red" }}>
-        Active User
-      </Grid>
+    <>
+      <Nav />
+      <Grid container sx={{ height: "100vh" }}>
+        <Grid
+          component={Paper}
+          container
+          item
+          display={{ xs: "none", md: "block" }}
+          md={3}
+        >
+          Side Bar
+        </Grid>
 
-      <Grid container item xs={6} direction="column">
-        |
-        <Grid item>
+        <Grid container item xs={12} md={9} direction="column">
           <Outlet />
         </Grid>
-        <Grid item sx={{ postion: "absolute", bottom: 0, top: 4 }}>
-          Action
-        </Grid>
       </Grid>
-
-      <Grid container item xs={3} sx={{ background: "green" }}>
-        User Detailes
-      </Grid>
-    </Grid>
+    </>
   );
 };
 
