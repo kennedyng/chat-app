@@ -4,6 +4,7 @@ import RootLayout from "./layout/root";
 import DetailsPage from "./pages/details";
 import ProfilePage from "./pages/profile";
 import LoginPage from "./pages/login";
+import GroupMessagePage from "./pages/group-message";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <div>Groupdddd Char</div>,
+        element: <GroupMessagePage />,
       },
     ],
   },
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "gender",
+        path: "profile",
         element: <ProfilePage />,
       },
       {

@@ -27,10 +27,18 @@ const channels = [
     title: "Front End",
     label: "FE",
   },
+  {
+    title: "Money Making",
+    label: "ME",
+  },
 ];
 const ChannelsTab = () => {
   const { setTabValue } = useSwapDrawerTabs();
   const theme = useTheme();
+
+  const handleListItemClick = () => {
+    setTabValue("2");
+  };
 
   return (
     <>
@@ -70,7 +78,11 @@ const ChannelsTab = () => {
         <List>
           {channels.map(({ title, label }) => (
             <ListItem dense key={title} disableGutters>
-              <ListItemButton disableRipple disableTouchRipple>
+              <ListItemButton
+                disableRipple
+                disableTouchRipple
+                onClick={handleListItemClick}
+              >
                 <ListItemAvatar>
                   <Avatar>{label}</Avatar>
                 </ListItemAvatar>
