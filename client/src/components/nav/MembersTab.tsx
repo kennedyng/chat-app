@@ -16,6 +16,7 @@ import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useSwapDrawerTabs } from "../../context/swapSideBarTabs";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { StyledBadge } from "./styles";
 
 const members = [
   {
@@ -58,7 +59,16 @@ const MembersTab = () => {
             <ListItem dense key={id} disableGutters>
               <ListItemButton disableRipple disableTouchRipple>
                 <ListItemAvatar>
-                  <Avatar>Ne</Avatar>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/1.jpg"
+                    />
+                  </StyledBadge>
                 </ListItemAvatar>
                 <ListItemText primary={name} />
               </ListItemButton>
