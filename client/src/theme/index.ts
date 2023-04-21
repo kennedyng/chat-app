@@ -54,5 +54,31 @@ export const theme = createTheme({
         },
       },
     },
+
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          borderRadius: "8px",
+          background: "#252329",
+          color: "white",
+          fontWeight: 600,
+          height: "42px",
+          width: "42px",
+        },
+      },
+    },
+
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          textTransform: "uppercase",
+          "& .MuiListItemText-primary": {
+            fontWeight: 700,
+            fontSize: 18,
+            color: "#BDBDBD",
+          },
+        },
+      },
+    },
   },
 });
