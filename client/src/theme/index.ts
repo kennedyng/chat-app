@@ -28,6 +28,14 @@ export const theme = createTheme({
       },
     },
 
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "8px",
+        },
+      },
+    },
+
     MuiLink: {
       styleOverrides: {
         root: {
