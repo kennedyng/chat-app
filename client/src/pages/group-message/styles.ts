@@ -3,6 +3,9 @@ import { Box } from "@mui/system";
 
 export const MessageTextField = styled(TextField)(({ theme }) => ({
   margin: "40px 0 40px 0",
+  [theme.breakpoints.down("sm")]: {
+    margin: "15px 0 15px 0",
+  },
 }));
 
 export const MessagesContent = styled(Box)(({ theme }) => ({
