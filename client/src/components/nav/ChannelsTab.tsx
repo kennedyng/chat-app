@@ -13,6 +13,7 @@ import {
   Avatar,
   InputAdornment,
   useTheme,
+  styled,
 } from "@mui/material";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,6 +33,12 @@ const channels = [
     label: "ME",
   },
 ];
+
+const SearchTextField = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-root": {
+    height: "48px",
+  },
+}));
 const ChannelsTab = () => {
   const { setTabValue } = useSwapDrawerTabs();
   const theme = useTheme();
@@ -60,7 +67,7 @@ const ChannelsTab = () => {
 
       <Box>
         <Box sx={{ p: 2 }}>
-          <TextField
+          <SearchTextField
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -68,6 +75,7 @@ const ChannelsTab = () => {
                 </InputAdornment>
               ),
             }}
+            type="search"
             placeholder="Search"
             fullWidth
             margin="dense"

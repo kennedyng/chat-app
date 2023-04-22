@@ -1,16 +1,7 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-} from "@mui/material";
-import React from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
+import { InputAdornment, Stack } from "@mui/material";
+import { MessagesContent, MessageTextField, SendButton } from "./styles";
+
 const GroupMessagePage = () => {
   return (
     <Stack
@@ -20,33 +11,22 @@ const GroupMessagePage = () => {
         pt: 2,
       }}
     >
-      <Box sx={{ background: "yellow", flex: 1 }}>dd</Box>
-      <Box
-        sx={{
-          flex: 0.3,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+      <MessagesContent>dd</MessagesContent>
+
+      <MessageTextField
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <SendButton>
+                <SendIcon fontSize="small" />
+              </SendButton>
+            </InputAdornment>
+          ),
         }}
-      >
-        <TextField
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">
-                <Button
-                  variant="contained"
-                  sx={{ width: "39px", height: "39px" }}
-                >
-                  <SendIcon sx={{ color: "#fff" }} fontSize="small" />
-                </Button>
-              </InputAdornment>
-            ),
-          }}
-          placeholder="Type a message here"
-          fullWidth
-          variant="outlined"
-        />
-      </Box>
+        placeholder="Type a message here"
+        fullWidth
+        variant="outlined"
+      />
     </Stack>
   );
 };
