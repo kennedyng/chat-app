@@ -42,14 +42,14 @@ const MembersTab = () => {
       </Toolbar>
 
       <Box sx={{ px: 2, color: "#E0E0E0" }}>
-        <Typography my={2} variant="h6" fontWeight={700}>
+        <Typography my={2} textTransform="uppercase" fontWeight={700}>
           Members
         </Typography>
         <Typography mt={2} mb={4}>
           Pellentesque sagittis elit enim, sit amet ultrices tellus accumsan
           quis. In gravida mollis purus, at interdum arcu tempor non
         </Typography>
-        <Typography variant="h6" fontWeight={700}>
+        <Typography textTransform="uppercase" fontWeight={700}>
           Members
         </Typography>
       </Box>

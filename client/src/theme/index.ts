@@ -4,13 +4,24 @@ export const theme = createTheme({
   palette: {
     mode: "dark",
     background: {
-      default: "#333333",
+      default: "#252329",
       paper: "#0B090C",
+    },
+
+    text: {
+      secondary: "#828282",
+      primary: "#E0E0E0",
     },
   },
 
   typography: {
     fontFamily: ["Noto Sans"].join(""),
+
+    body1: {
+      fontSize: "18px",
+      fontWeight: 500,
+      lineHeight: "25px",
+    },
   },
 
   components: {

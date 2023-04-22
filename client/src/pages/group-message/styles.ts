@@ -6,11 +6,28 @@ export const MessageTextField = styled(TextField)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     margin: "15px 0 15px 0",
   },
+
+  [theme.breakpoints.up("xs")]: {
+    padding: "0 10px",
+  },
+
+  [theme.breakpoints.up("md")]: {
+    padding: "0 76px",
+  },
 }));
 
 export const MessagesContent = styled(Box)(({ theme }) => ({
   flex: theme.spacing(1),
-  background: "red",
+  overflow: "auto",
+  padding: "40px",
+
+  [theme.breakpoints.up("xs")]: {
+    padding: "0 10px",
+  },
+
+  [theme.breakpoints.up("md")]: {
+    padding: "0 76px",
+  },
 }));
 
 export const SendButton = styled(IconButton)(({ theme }) => ({

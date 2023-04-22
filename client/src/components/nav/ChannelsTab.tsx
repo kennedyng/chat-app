@@ -56,17 +56,19 @@ const ChannelsTab = () => {
           direction="row"
           justifyContent="space-between"
         >
-          <Typography variant="h6" fontWeight={700}>
-            Channel
+          <Typography variant="body1" fontWeight={700}>
+            Channels
           </Typography>
-          <IconButton sx={{ background: "#252329" }}>
+          <IconButton
+            sx={{ background: "#252329", width: "32px", height: "32px" }}
+          >
             <AddIcon />
           </IconButton>
         </Stack>
       </Toolbar>
 
       <Box>
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ px: 2, py: 1.5 }}>
           <SearchTextField
             InputProps={{
               startAdornment: (
