@@ -14,11 +14,18 @@ import {
   InputAdornment,
   useTheme,
   styled,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDrawer } from "../../context/drawer";
+import { AddChannelButton } from "./styles";
+import { useToggle } from "../../hooks/useToggle";
 const channels = [
   {
     title: "welcome",
@@ -41,10 +48,20 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 }));
 const ChannelsTab = () => {
   const { setTabValue } = useDrawer();
+
+  const [openChannelForm, toggleChannelForm] = useToggle();
   const theme = useTheme();
 
   const handleListItemClick = () => {
     setTabValue("2");
+  };
+
+  const handleAddNewChannelClick = () => {
+    toggleChannelForm();
+  };
+
+  const handleSaveChannelClick = () => {
+    toggleChannelForm();
   };
 
   return (
@@ -59,13 +76,33 @@ const ChannelsTab = () => {
           <Typography variant="body1" fontWeight={700}>
             Channels
           </Typography>
-          <IconButton
-            sx={{ background: "#252329", width: "32px", height: "32px" }}
-          >
+          <AddChannelButton onClick={handleAddNewChannelClick}>
             <AddIcon />
-          </IconButton>
+          </AddChannelButton>
         </Stack>
       </Toolbar>
+
+      <Dialog open={openChannelForm} onClose={toggleChannelForm}>
+        <DialogTitle>
+          <Typography fontWeight={700}>NEW CHANNEL</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <TextField placeholder="Channel name" margin="normal" fullWidth />
+          <TextField
+            placeholder="Channel Description"
+            margin="normal"
+            multiline
+            minRows={4}
+            fullWidth
+          />
+
+          <DialogActions>
+            <Button onClick={handleSaveChannelClick} variant="contained">
+              Save
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
 
       <Box>
         <Box sx={{ px: 2, py: 1.5 }}>

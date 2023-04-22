@@ -90,3 +90,9 @@ export const BottomUserActions = styled(Box)(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(0, 2),
 }));
+
+export const AddChannelButton = styled(IconButton)(({ theme }) => ({
+  background: "#252329",
+  width: "32px",
+  height: "32px",
+}));
