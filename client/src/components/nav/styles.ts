@@ -1,8 +1,8 @@
-import { Badge, Drawer, styled } from "@mui/material";
+import { Badge, Box, Drawer, IconButton, styled } from "@mui/material";
 
 const drawerWidth = "324px";
 
-export const StyledTopDrawer = styled(Drawer)(({ theme }) => ({
+export const StyledDrawer = styled(Drawer)(({ theme }) => ({
   ".MuiDrawer-paper": {
     boxSizing: "border-box",
     width: drawerWidth,
@@ -15,23 +15,24 @@ export const StyledTopDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-StyledTopDrawer.defaultProps = {
+StyledDrawer.defaultProps = {
   variant: "persistent",
   elevation: 0,
 };
 
-export const StyledTopMobileDrawer = styled(Drawer)(({ theme }) => ({
+export const StyledMobileDrawer = styled(Drawer)(({ theme }) => ({
   ".MuiDrawer-paper": {
     width: drawerWidth,
     background: "#120F13",
     border: "none",
+    overflow: "visible",
   },
   [theme.breakpoints.up("md")]: {
     display: "none",
   },
 }));
 
-StyledTopMobileDrawer.defaultProps = {
+StyledMobileDrawer.defaultProps = {
   variant: "persistent",
   elevation: 0,
 };
@@ -63,4 +64,29 @@ export const StyledBadge = styled(Badge)(({ theme }) => ({
       opacity: 0,
     },
   },
+}));
+
+export const CloseDrawerButton = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  background: "#120F13",
+  width: "38px",
+  height: "38px",
+  top: theme.spacing(5),
+  left: "calc(324px + 10px)",
+  display: "none",
+  [theme.breakpoints.down("md")]: {
+    display: "block",
+  },
+}));
+
+export const BottomUserActions = styled(Box)(({ theme }) => ({
+  position: "fixed",
+  bottom: 0,
+  background: "#0B090C",
+  width: "324px",
+  height: "76.5px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(0, 2),
 }));

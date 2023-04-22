@@ -1,16 +1,10 @@
 import {
   AppBar,
   Avatar,
-  Box,
   Divider,
   Fade,
   Grid,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Menu,
   MenuItem,
   Toolbar,
@@ -20,18 +14,23 @@ import { Stack } from "@mui/system";
 import React from "react";
 
 import MenuIcon from "@mui/icons-material/Menu";
-import { useToggle } from "../../hooks/useToggle";
 import { TabContext, TabPanel } from "@mui/lab";
-import { StyledTopDrawer, StyledTopMobileDrawer } from "./styles";
-import MembersTab from "./MembersTab";
+import { useToggle } from "../../hooks/useToggle";
 import ChannelsTab from "./ChannelsTab";
+import MembersTab from "./MembersTab";
+import {
+  BottomUserActions,
+  CloseDrawerButton,
+  StyledDrawer,
+  StyledMobileDrawer,
+} from "./styles";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+
+import CloseIcon from "@mui/icons-material/Close";
 import { useSwapDrawerTabs } from "../../context/swapSideBarTabs";
 
-const TopElevetedDrawer = () => {
+const DrawerContenr = () => {
   const { tabValue } = useSwapDrawerTabs();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,6 +44,9 @@ const TopElevetedDrawer = () => {
 
   return (
     <>
+      <CloseDrawerButton>
+        <CloseIcon />
+      </CloseDrawerButton>
       <TabContext value={tabValue}>
         <TabPanel value="1" sx={{ p: 0 }}>
           <ChannelsTab />
@@ -54,22 +56,10 @@ const TopElevetedDrawer = () => {
         </TabPanel>
       </TabContext>
 
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          background: "#0B090C",
-          width: "324px",
-          height: "76.5px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          px: 2,
-        }}
-      >
+      <BottomUserActions>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar>I</Avatar>
-          <Typography fontWeight={700} variant="h6" sx={{ color: "#828282" }}>
+          <Avatar sx={{ width: "42px", height: "42px" }} alt="I"></Avatar>
+          <Typography fontWeight={700} color="text.secondary">
             Xanthe Neal
           </Typography>
         </Stack>
@@ -82,7 +72,7 @@ const TopElevetedDrawer = () => {
         >
           <ExpandMoreIcon />
         </IconButton>
-      </Box>
+      </BottomUserActions>
 
       <Menu
         id="user-menu"
@@ -101,6 +91,7 @@ const TopElevetedDrawer = () => {
     </>
   );
 };
+
 const Nav = () => {
   const [isDrawerOpen, toggleDrawer] = useToggle();
   return (
@@ -126,13 +117,13 @@ const Nav = () => {
         </Toolbar>
       </AppBar>
 
-      <StyledTopMobileDrawer open={isDrawerOpen}>
-        <TopElevetedDrawer />
-      </StyledTopMobileDrawer>
+      <StyledMobileDrawer open={isDrawerOpen}>
+        <DrawerContenr />
+      </StyledMobileDrawer>
 
-      <StyledTopDrawer open={true}>
-        <TopElevetedDrawer />
-      </StyledTopDrawer>
+      <StyledDrawer open={true}>
+        <DrawerContenr />
+      </StyledDrawer>
     </>
   );
 };
