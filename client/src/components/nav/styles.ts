@@ -71,8 +71,8 @@ export const CloseDrawerButton = styled(IconButton)(({ theme }) => ({
   background: "#120F13",
   width: "38px",
   height: "38px",
-  top: theme.spacing(5),
-  left: "calc(324px + 10px)",
+  top: "5px",
+  left: "calc(324px + 6px)",
   display: "none",
   [theme.breakpoints.down("md")]: {
     display: "block",
