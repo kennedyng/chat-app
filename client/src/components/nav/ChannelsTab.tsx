@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { useSwapDrawerTabs } from "../../context/swapSideBarTabs";
 import SearchIcon from "@mui/icons-material/Search";
+import { useDrawer } from "../../context/drawer";
 const channels = [
   {
     title: "welcome",
@@ -40,7 +40,7 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 const ChannelsTab = () => {
-  const { setTabValue } = useSwapDrawerTabs();
+  const { setTabValue } = useDrawer();
   const theme = useTheme();
 
   const handleListItemClick = () => {

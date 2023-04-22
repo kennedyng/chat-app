@@ -28,10 +28,10 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { useSwapDrawerTabs } from "../../context/swapSideBarTabs";
+import { useDrawer } from "../../context/drawer";
 
-const DrawerContenr = () => {
-  const { tabValue } = useSwapDrawerTabs();
+const DraweContent = () => {
+  const { tabValue, toggleDrawer } = useDrawer();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -44,7 +44,7 @@ const DrawerContenr = () => {
 
   return (
     <>
-      <CloseDrawerButton>
+      <CloseDrawerButton onClick={toggleDrawer}>
         <CloseIcon />
       </CloseDrawerButton>
       <TabContext value={tabValue}>
@@ -93,7 +93,7 @@ const DrawerContenr = () => {
 };
 
 const Nav = () => {
-  const [isDrawerOpen, toggleDrawer] = useToggle();
+  const { open, toggleDrawer } = useDrawer();
   return (
     <>
       <AppBar color="transparent" position="fixed">
@@ -101,7 +101,7 @@ const Nav = () => {
           <Grid container>
             <Grid container item xs={12} md={9} sx={{ px: { xs: 0, md: 4 } }}>
               <Stack direction="row" alignItems="center" spacing={2}>
-                {!isDrawerOpen && (
+                {!open && (
                   <IconButton
                     onClick={toggleDrawer}
                     sx={{
@@ -117,12 +117,12 @@ const Nav = () => {
         </Toolbar>
       </AppBar>
 
-      <StyledMobileDrawer open={isDrawerOpen}>
-        <DrawerContenr />
+      <StyledMobileDrawer open={open}>
+        <DraweContent />
       </StyledMobileDrawer>
 
       <StyledDrawer open={true}>
-        <DrawerContenr />
+        <DraweContent />
       </StyledDrawer>
     </>
   );

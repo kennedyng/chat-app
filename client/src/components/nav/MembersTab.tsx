@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { useSwapDrawerTabs } from "../../context/swapSideBarTabs";
+import { useDrawer } from "../../context/drawer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { StyledBadge } from "./styles";
 
@@ -29,7 +29,7 @@ const members = [
   },
 ];
 const MembersTab = () => {
-  const { setTabValue } = useSwapDrawerTabs();
+  const { setTabValue } = useDrawer();
   return (
     <>
       <Toolbar>
