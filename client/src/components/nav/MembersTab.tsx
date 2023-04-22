@@ -33,7 +33,12 @@ const MembersTab = () => {
   return (
     <>
       <Toolbar>
-        <Stack sx={{ flex: 1 }} alignItems="center" direction="row" spacing={2}>
+        <Stack
+          sx={{ flex: 1 }}
+          alignItems="center"
+          direction="row"
+          spacing={1.5}
+        >
           <IconButton onClick={() => setTabValue("1")}>
             <ArrowBackIosIcon />
           </IconButton>
