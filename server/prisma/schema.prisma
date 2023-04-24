@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -19,8 +19,7 @@ model User {
   message Message[]
   room    Room[]
 
-  profile       UserProfile? @relation(fields: [userProfileId], references: [id])
-  userProfileId Int          @unique
+  profile UserProfile?
 }
 
 model UserProfile {
@@ -28,7 +27,8 @@ model UserProfile {
   img_url String?
   name    String
 
-  User User[]
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
 }
 
 model Room {
@@ -37,6 +37,8 @@ model Room {
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  messages Message[]
 
   User   User? @relation(fields: [userId], references: [id])
   userId Int?
@@ -48,4 +50,6 @@ model Message {
   createdAt DateTime @default(now())
   User      User?    @relation(fields: [userId], references: [id])
   userId    Int?
+  Room      Room?    @relation(fields: [roomId], references: [id])
+  roomId    Int?
 }

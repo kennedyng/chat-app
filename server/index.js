@@ -20,7 +20,7 @@ app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
-app.use("/message", userRouter);
+app.use("/message", messageRouter);
 
 app.listen(port, () => {
   console.log("chat app runing on http://localhost:" + port);
