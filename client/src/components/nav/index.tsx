@@ -83,6 +83,17 @@ const DraweContent = () => {
         open={open}
         onClose={handleClose}
         TransitionComponent={Fade}
+        transformOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal: "left", vertical: "center" }}
+        PaperProps={{
+          sx: {
+            py: "15px",
+            px: "12px",
+            background: "#252329",
+            width: "192px",
+            borderRadius: "12px",
+          },
+        }}
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <Divider />
