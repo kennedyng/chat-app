@@ -1,35 +1,41 @@
 import {
-  MenuItem,
   Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  Select,
-  TextField,
-  Typography,
   Divider,
   InputAdornment,
+  Link as MuiLink,
   Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import videoChatSvg from "../../assets/video-chat.svg";
-import { SelectChangeEvent } from "@mui/material/Select";
-import React from "react";
-import { Link as MuiLink } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import GoogleIcon from "@mui/icons-material/Google";
-import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
-const FormDetails = () => {
-  const [age, setAge] = React.useState("");
+import PersonIcon from "@mui/icons-material/Person";
+import { useFormik } from "formik";
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
+import * as Yup from "yup";
+const FormDetails = () => {
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string()
+        .required("No password provided.")
+        .min(8, "Password is too short - should be 8 chars minimum.")
+        .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
 
   return (
-    <Box component="form">
+    <Box component="form" onSubmit={formik.handleSubmit}>
       <TextField
         InputProps={{
           startAdornment: (
@@ -38,8 +44,13 @@ const FormDetails = () => {
             </InputAdornment>
           ),
         }}
+        {...formik.getFieldProps("email")}
+        error={
+          Boolean(formik.touched.password) && Boolean(formik.errors.password)
+        }
         size="small"
         placeholder="Email"
+        helperText={formik.errors.email}
         fullWidth
         margin="dense"
         variant="outlined"
@@ -53,20 +64,19 @@ const FormDetails = () => {
             </InputAdornment>
           ),
         }}
+        error={
+          Boolean(formik.touched.password) && Boolean(formik.errors.password)
+        }
+        {...formik.getFieldProps("password")}
         size="small"
         placeholder="password"
+        helperText={formik.errors.password}
         fullWidth
         margin="dense"
         variant="outlined"
       />
 
-      <Button
-        component={Link}
-        to="/auth/gender"
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-      >
+      <Button variant="contained" type="submit" fullWidth sx={{ mt: 2 }}>
         Login
       </Button>
     </Box>
