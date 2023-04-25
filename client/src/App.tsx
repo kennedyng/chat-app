@@ -1,7 +1,10 @@
 import {
+  BrowserRouter,
   createBrowserRouter,
   Navigate,
+  Route,
   RouterProvider,
+  Routes,
 } from "react-router-dom";
 import AuthLayout from "./layout/auth";
 import RootLayout from "./layout/root";
@@ -11,61 +14,39 @@ import LoginPage from "./pages/login";
 import GroupMessagePage from "./pages/group-message";
 import { RequireAuth, useIsAuthenticated } from "react-auth-kit";
 
-interface PrivateRoutesProps {
-  children: JSX.Element;
-}
-
-const PrivateRoute: React.FC<PrivateRoutesProps> = ({ children }) => {
-  const isAuthenticated = useIsAuthenticated();
-  const auth = isAuthenticated();
-
-  if (auth) {
-    return <>{children}</>;
-  } else {
-    return <Navigate to="auth" />;
-  }
-};
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-
-    element: (
-      <PrivateRoute>
-        <RootLayout />
-      </PrivateRoute>
-    ),
-    errorElement: <h1>Something Went Wrong</h1>,
-    children: [
-      {
-        index: true,
-        element: <GroupMessagePage />,
-      },
-    ],
-  },
-
-  {
-    path: "auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        index: true,
-        element: <LoginPage />,
-      },
-      {
-        path: "profile",
-        element: <ProfilePage />,
-      },
-      {
-        path: "personal/details",
-        element: <DetailsPage />,
-      },
-    ],
-  },
-]);
-
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RequireAuth loginPath="/auth/login">
+              <RootLayout />
+            </RequireAuth>
+          }
+        >
+          <Route index element={<GroupMessagePage />} />
+        </Route>
+
+        <Route path="auth" element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<LoginPage />} />
+        </Route>
+
+        <Route
+          path="user"
+          element={
+            <RequireAuth loginPath="/auth/login">
+              <AuthLayout />
+            </RequireAuth>
+          }
+        >
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

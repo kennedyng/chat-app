@@ -12,6 +12,7 @@ const RootLayout = () => {
   const [isDrawerOpen, toggleDrawer] = useToggle();
 
   const theme = useTheme();
+
   return (
     <>
       <Nav />

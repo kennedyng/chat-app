@@ -44,6 +44,8 @@ const DraweContent = () => {
 
   const handleSignOut = () => {
     signOut();
+
+    console.log("signing out");
     setAnchorEl(null);
   };
   const handleClose = () => {

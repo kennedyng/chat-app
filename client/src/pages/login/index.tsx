@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
 
 import GoogleIcon from "@mui/icons-material/Google";
 import LockIcon from "@mui/icons-material/Lock";
@@ -29,15 +29,27 @@ import { useSignIn } from "react-auth-kit";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const LoginPage = () => {
+  const signIn = useSignIn();
+  const navigate = useNavigate();
   const {
     isLoading,
     mutate: loginMutate,
     isError,
     error,
-  } = useMutation(loginUser);
-
-  const signIn = useSignIn();
-  const navigate = useNavigate();
+  } = useMutation(loginUser, {
+    onSuccess({ data }) {
+      if (
+        signIn({
+          token: data.token,
+          tokenType: "Bearer",
+          expiresIn: 60,
+          authState: { id: data.id },
+        })
+      ) {
+        navigate("/");
+      }
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -52,24 +64,7 @@ const LoginPage = () => {
         .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     }),
     onSubmit: (values) => {
-      loginMutate(values, {
-        onSuccess({ data }) {
-          if (
-            signIn({
-              token: data.token,
-              tokenType: "Bearer",
-              expiresIn: 3600,
-
-              authState: { id: data.id, email: data.email },
-            })
-          ) {
-            console.log("login In");
-            navigate("/");
-          } else {
-            navigate("/auth");
-          }
-        },
-      });
+      loginMutate(values);
     },
   });
 
