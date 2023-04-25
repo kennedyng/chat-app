@@ -1,6 +1,10 @@
 import {
+  Alert,
+  AlertTitle,
   Button,
+  Collapse,
   Divider,
+  Fade,
   InputAdornment,
   Link as MuiLink,
   Stack,
@@ -8,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import GoogleIcon from "@mui/icons-material/Google";
 import LockIcon from "@mui/icons-material/Lock";
@@ -16,7 +20,25 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
 import * as Yup from "yup";
-const FormDetails = () => {
+import { useMutation, useQuery } from "react-query";
+import { loginUser } from "src/api/user";
+import { LoadingButton } from "@mui/lab";
+
+import { useSignIn } from "react-auth-kit";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+const LoginPage = () => {
+  const {
+    isLoading,
+    mutate: loginMutate,
+    isError,
+    error,
+  } = useMutation(loginUser);
+
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -30,67 +52,87 @@ const FormDetails = () => {
         .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      loginMutate(values, {
+        onSuccess({ data }) {
+          if (
+            signIn({
+              token: data.token,
+              tokenType: "Bearer",
+              expiresIn: 60,
+            })
+          ) {
+            navigate("/");
+          } else {
+            console.log("Error Occpied");
+          }
+        },
+      });
     },
   });
 
-  return (
-    <Box component="form" onSubmit={formik.handleSubmit}>
-      <TextField
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <PersonIcon />
-            </InputAdornment>
-          ),
-        }}
-        {...formik.getFieldProps("email")}
-        error={
-          Boolean(formik.touched.password) && Boolean(formik.errors.password)
-        }
-        size="small"
-        placeholder="Email"
-        helperText={formik.errors.email}
-        fullWidth
-        margin="dense"
-        variant="outlined"
-      />
-
-      <TextField
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LockIcon />
-            </InputAdornment>
-          ),
-        }}
-        error={
-          Boolean(formik.touched.password) && Boolean(formik.errors.password)
-        }
-        {...formik.getFieldProps("password")}
-        size="small"
-        placeholder="password"
-        helperText={formik.errors.password}
-        fullWidth
-        margin="dense"
-        variant="outlined"
-      />
-
-      <Button variant="contained" type="submit" fullWidth sx={{ mt: 2 }}>
-        Login
-      </Button>
-    </Box>
-  );
-};
-
-const LoginPage = () => {
   return (
     <Box>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
         Log In
       </Typography>
 
-      <FormDetails />
+      <Collapse in={isError}>
+        <Alert severity="error">
+          <AlertTitle>Auth Failed</AlertTitle>
+          Invalid Email or Password — <strong>check it out!</strong>
+        </Alert>
+      </Collapse>
+
+      <Box component="form" onSubmit={formik.handleSubmit}>
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonIcon />
+              </InputAdornment>
+            ),
+          }}
+          {...formik.getFieldProps("email")}
+          error={Boolean(formik.touched.email) && Boolean(formik.errors.email)}
+          size="small"
+          placeholder="Email"
+          helperText={formik.errors.email}
+          fullWidth
+          margin="dense"
+          variant="outlined"
+        />
+
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockIcon />
+              </InputAdornment>
+            ),
+          }}
+          error={
+            Boolean(formik.touched.password) && Boolean(formik.errors.password)
+          }
+          {...formik.getFieldProps("password")}
+          size="small"
+          type="password"
+          placeholder="password"
+          helperText={formik.errors.password}
+          fullWidth
+          margin="dense"
+          variant="outlined"
+        />
+
+        <LoadingButton
+          sx={{ mt: 2 }}
+          type="submit"
+          loading={isLoading}
+          variant="contained"
+          fullWidth
+        >
+          <span>Login</span>
+        </LoadingButton>
+      </Box>
 
       <Divider sx={{ my: 2 }}>
         <Typography>or</Typography>

@@ -8,19 +8,26 @@ import "./index.css";
 import { theme } from "./theme";
 
 import { ReactQueryDevtools } from "react-query/devtools";
-
+import { AuthProvider } from "react-auth-kit";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <DrawerProvider>
-          <App />
+          <AuthProvider
+            authType={"cookie"}
+            authName={"_auth"}
+            cookieDomain={window.location.hostname}
+            cookieSecure={window.location.protocol === "https:"}
+          >
+            <App />
+          </AuthProvider>
         </DrawerProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

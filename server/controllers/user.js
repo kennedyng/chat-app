@@ -9,22 +9,20 @@ module.exports = {
         },
       });
 
-      if (user) {
-        if (user.password === req.body.password) {
-          const token = jwt.sign(
-            {
-              id: user.id,
-              email: user.email,
-            },
-            process.env.JWT_KEY
-          );
-          return res
-            .status(200)
-            .json({ message: "authorization successfull", token });
-        }
+      if (user && user.password === req.body.password) {
+        const token = jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          process.env.JWT_KEY
+        );
+        return res
+          .status(200)
+          .json({ message: "authorization successfull", token });
+      } else {
         return res.status(403).json({ message: "Auth Failed" });
       }
-      return res.status(403).json({ message: "Auth Failed" });
     } catch (error) {
       res.status(500).json(error);
     }
