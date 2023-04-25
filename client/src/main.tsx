@@ -13,21 +13,22 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <DrawerProvider>
-          <AuthProvider
-            authType={"cookie"}
-            authName={"_auth"}
-            cookieDomain={window.location.hostname}
-            cookieSecure={window.location.protocol === "https:"}
-          >
+    <AuthProvider
+      authType={"cookie"}
+      authName={"_auth"}
+      cookieDomain={window.location.hostname}
+      // cookieSecure={window.location.protocol === "https:"}
+      cookieSecure={false}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <DrawerProvider>
             <App />
-          </AuthProvider>
-        </DrawerProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+          </DrawerProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

@@ -15,15 +15,22 @@ module.exports = {
             id: user.id,
             email: user.email,
           },
-          process.env.JWT_KEY
+          process.env.JWT_KEY,
+          {
+            expiresIn: "1h",
+          }
         );
-        return res
-          .status(200)
-          .json({ message: "authorization successfull", token });
+        return res.status(200).json({
+          message: "authorization successfull",
+          id: user.id,
+          email: user.email,
+          token,
+        });
       } else {
         return res.status(403).json({ message: "Auth Failed" });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json(error);
     }
   },
@@ -48,7 +55,6 @@ module.exports = {
 
       res.status(409).json({ message: "email is used" });
     } catch (error) {
-      console.log(error);
       res.status(500).json({ error });
     }
   },

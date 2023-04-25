@@ -29,6 +29,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { useDrawer } from "../../context/drawer";
+import { useSignOut } from "react-auth-kit";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
@@ -37,6 +38,13 @@ const DraweContent = () => {
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const signOut = useSignOut();
+
+  const handleSignOut = () => {
+    signOut();
+    setAnchorEl(null);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -97,7 +105,7 @@ const DraweContent = () => {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Log out</MenuItem>
+        <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
       </Menu>
     </>
   );

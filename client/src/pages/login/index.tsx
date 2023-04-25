@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import GoogleIcon from "@mui/icons-material/Google";
 import LockIcon from "@mui/icons-material/Lock";
@@ -58,12 +58,15 @@ const LoginPage = () => {
             signIn({
               token: data.token,
               tokenType: "Bearer",
-              expiresIn: 60,
+              expiresIn: 3600,
+
+              authState: { id: data.id, email: data.email },
             })
           ) {
+            console.log("login In");
             navigate("/");
           } else {
-            console.log("Error Occpied");
+            navigate("/auth");
           }
         },
       });
