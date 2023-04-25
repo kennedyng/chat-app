@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL: string = import.meta.env.VITE_API_URL;
+import { API_URL } from ".";
 
 interface bodyType {
   email: string;
@@ -7,4 +7,4 @@ interface bodyType {
 }
 
 export const loginUser = (body: bodyType) =>
-  axios.post(`http://localhost:3000/user/login/`, body);
+  axios.post(`${API_URL}/user/login/`, body);

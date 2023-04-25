@@ -26,6 +26,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDrawer } from "../../context/drawer";
 import { AddChannelButton } from "./styles";
 import { useToggle } from "../../hooks/useToggle";
+import { useQuery } from "react-query";
+import { fetchAllChannels } from "src/api/channels";
+import { PuffLoader } from "react-spinners";
 const channels = [
   {
     title: "welcome",
@@ -46,8 +49,13 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
     height: "48px",
   },
 }));
+
 const ChannelsTab = () => {
   const { setTabValue } = useDrawer();
+
+  const { data, isLoading } = useQuery("channels", fetchAllChannels);
+
+  console.log(data);
 
   const [openChannelForm, toggleChannelForm] = useToggle();
   const theme = useTheme();
@@ -121,23 +129,37 @@ const ChannelsTab = () => {
             variant="outlined"
           />
         </Box>
+        {isLoading && (
+          <Box
+            sx={{
+              mt: 5,
+              display: "flex",
+              justifyContent: "center",
+              alightItems: "center",
+            }}
+          >
+            <PuffLoader color={theme.palette.primary.main} />
+          </Box>
+        )}
 
-        <List>
-          {channels.map(({ title, label }) => (
-            <ListItem dense key={title} disableGutters>
-              <ListItemButton
-                disableRipple
-                disableTouchRipple
-                onClick={handleListItemClick}
-              >
-                <ListItemAvatar>
-                  <Avatar>{label}</Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={title} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        {!isLoading && data && (
+          <List>
+            {data.map(({ name, description, id }: any) => (
+              <ListItem dense key={id} disableGutters>
+                <ListItemButton
+                  disableRipple
+                  disableTouchRipple
+                  onClick={handleListItemClick}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt={name}></Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        )}
       </Box>
     </>
   );
