@@ -6,6 +6,7 @@ import {
   styled,
   TextField,
 } from "@mui/material";
+import { PuffLoader } from "react-spinners";
 
 const drawerWidth = "324px";
 
@@ -108,4 +109,21 @@ export const SearchTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-root": {
     height: "48px",
   },
+}));
+
+export const ListContent = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  height: "calc(100% - 140px)",
+  overflow: "auto",
+
+  [theme.breakpoints.down("sm")]: {
+    height: "calc(100% - 130px)",
+  },
+}));
+
+export const Loader = styled(PuffLoader)(({ theme }) => ({
+  margin: theme.spacing(4, "auto"),
+  display: "flex",
+  justifyContent: "center",
+  alightItems: "center",
 }));

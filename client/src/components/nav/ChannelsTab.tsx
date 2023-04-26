@@ -15,7 +15,6 @@ import {
   ListItemButton,
   ListItemText,
   Stack,
-  styled,
   TextField,
   Toolbar,
   Typography,
@@ -26,18 +25,21 @@ import { useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { PuffLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { createChannel, fetchAllChannels, joinChannel } from "src/api/channels";
 import * as Yup from "yup";
 import { useDrawer } from "../../context/drawer";
 import { useToggle } from "../../hooks/useToggle";
-import { AddChannelButton, SearchTextField } from "./styles";
+import {
+  AddChannelButton,
+  ListContent,
+  Loader,
+  SearchTextField,
+} from "./styles";
 
 const ChannelsTab = () => {
   const authHeader = useAuthHeader();
   const auth = useAuthUser();
-  const { channel: channelId } = useParams();
 
   const { setTabValue } = useDrawer();
   const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
@@ -174,13 +176,7 @@ const ChannelsTab = () => {
         </DialogContent>
       </Dialog>
 
-      <Box
-        sx={{
-          position: "absolute",
-          height: "calc(100% - 78px)",
-          overflow: "auto",
-        }}
-      >
+      <ListContent>
         <Box sx={{ px: 2, py: 1.5 }}>
           <SearchTextField
             InputProps={{
@@ -197,18 +193,7 @@ const ChannelsTab = () => {
             variant="outlined"
           />
         </Box>
-        {isLoading && (
-          <Box
-            sx={{
-              mt: 5,
-              display: "flex",
-              justifyContent: "center",
-              alightItems: "center",
-            }}
-          >
-            <PuffLoader color={theme.palette.primary.main} />
-          </Box>
-        )}
+        {isLoading && <Loader color={theme.palette.primary.main} />}
 
         {isSuccess && (
           <List>
@@ -232,7 +217,7 @@ const ChannelsTab = () => {
           </List>
         )}
         <div ref={channelsEndRef} />
-      </Box>
+      </ListContent>
     </>
   );
 };
