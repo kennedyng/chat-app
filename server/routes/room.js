@@ -18,7 +18,7 @@ router.post("/create", checkAuth, async (req, res) => {
         data: {
           name: req.body.name,
           description: req.body.description,
-          userId: req.userData.id,
+          userId: Number(req.userData.id),
         },
       });
 
@@ -35,7 +35,7 @@ router.post("/create", checkAuth, async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const roomsData = await prisma.room.findMany();
-    
+
     res.status(200).json(roomsData);
   } catch (error) {
     res.status(200).json(error);

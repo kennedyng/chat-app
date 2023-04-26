@@ -26,9 +26,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDrawer } from "../../context/drawer";
 import { AddChannelButton } from "./styles";
 import { useToggle } from "../../hooks/useToggle";
-import { useQuery } from "react-query";
-import { fetchAllChannels } from "src/api/channels";
+import { useMutation, useQuery } from "react-query";
+import { createChannel, fetchAllChannels } from "src/api/channels";
 import { PuffLoader } from "react-spinners";
+import { useNavigate, useNavigation } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { LoadingButton } from "@mui/lab";
 
 const SearchTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-root": {
@@ -37,26 +42,56 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const ChannelsTab = () => {
+  const authHeader = useAuthHeader();
+
+  const auth = useAuthUser();
   const { setTabValue } = useDrawer();
 
   const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
-
-  console.log(data);
+  const { mutate: mutateChannel, isLoading: isCreatingChannel } =
+    useMutation(createChannel);
 
   const [openChannelForm, toggleChannelForm] = useToggle();
   const theme = useTheme();
 
-  const handleListItemClick = () => {
+  const navigate = useNavigate();
+
+  const handleListItemClick = (channelId: string | number) => {
     setTabValue("2");
+    navigate(`/${channelId}`);
   };
 
   const handleAddNewChannelClick = () => {
     toggleChannelForm();
   };
 
-  const handleSaveChannelClick = () => {
-    toggleChannelForm();
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      description: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .max(20, "name must contain less than 20 characters")
+        .min(2, "name must contain atleast two characters")
+        .required("Required"),
+      description: Yup.string()
+        .required("no description is provided")
+        .min(24, "Meaningful Description with atleast 24 characters")
+        .max(
+          100,
+          " description must contain with atleast 100 or less characters"
+        ),
+    }),
+    onSubmit: (values) => {
+      const body = { ...values, id: String(auth()?.id), token: authHeader() };
+      mutateChannel(body, {
+        onSuccess(data) {
+          toggleChannelForm();
+        },
+      });
+    },
+  });
 
   return (
     <>
@@ -81,20 +116,41 @@ const ChannelsTab = () => {
           <Typography fontWeight={700}>NEW CHANNEL</Typography>
         </DialogTitle>
         <DialogContent>
-          <TextField placeholder="Channel name" margin="normal" fullWidth />
-          <TextField
-            placeholder="Channel Description"
-            margin="normal"
-            multiline
-            minRows={4}
-            fullWidth
-          />
+          <form onSubmit={formik.handleSubmit}>
+            <TextField
+              {...formik.getFieldProps("name")}
+              placeholder="Channel name"
+              margin="normal"
+              fullWidth
+              error={
+                Boolean(formik.touched.name) && Boolean(formik.errors.name)
+              }
+              helperText={formik.errors.name}
+            />
+            <TextField
+              error={
+                Boolean(formik.touched.description) &&
+                Boolean(formik.errors.description)
+              }
+              {...formik.getFieldProps("description")}
+              placeholder="Channel Description"
+              margin="normal"
+              multiline
+              minRows={4}
+              fullWidth
+              helperText={formik.errors.description}
+            />
 
-          <DialogActions>
-            <Button onClick={handleSaveChannelClick} variant="contained">
-              Save
-            </Button>
-          </DialogActions>
+            <DialogActions>
+              <LoadingButton
+                type="submit"
+                loading={isCreatingChannel}
+                variant="contained"
+              >
+                <span>Save</span>
+              </LoadingButton>
+            </DialogActions>
+          </form>
         </DialogContent>
       </Dialog>
 
@@ -135,10 +191,10 @@ const ChannelsTab = () => {
                 <ListItemButton
                   disableRipple
                   disableTouchRipple
-                  onClick={handleListItemClick}
+                  onClick={() => handleListItemClick(id)}
                 >
                   <ListItemAvatar>
-                    <Avatar alt={name}></Avatar>
+                    <Avatar src="/" alt={name.toUpperCase()}></Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={name} />
                 </ListItemButton>

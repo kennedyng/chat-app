@@ -26,8 +26,6 @@ import { LoadingButton } from "@mui/lab";
 
 import { useSignIn } from "react-auth-kit";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 const LoginPage = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
