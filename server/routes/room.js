@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
+const { join } = require("@prisma/client/runtime");
 
 const checkAuth = require("../middlewares/checkAuth");
 
@@ -32,13 +33,55 @@ router.post("/create", checkAuth, async (req, res) => {
   }
 });
 
+router.post("/join/:roomId", checkAuth, async (req, res) => {
+  try {
+    const joinedRooms = await prisma.usersJoinedRoom.findMany({
+      where: {
+        userId: Number(req.userData.id),
+        roomId: Number(req.params.roomId),
+      },
+    });
+
+    if (joinedRooms.length > 0) {
+      return res
+        .status(201)
+        .json({ message: "Welcome back To the Room", data: joinedRooms });
+    }
+
+    const joinRoomData = await prisma.usersJoinedRoom.create({
+      data: {
+        userId: Number(req.userData.id),
+        roomId: Number(req.params.roomId),
+      },
+    });
+
+    res.status(201).json({ message: "Joined successfully" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.get("/all", async (req, res) => {
   try {
     const roomsData = await prisma.room.findMany();
 
     res.status(200).json(roomsData);
   } catch (error) {
-    res.status(200).json(error);
+    res.status(500).json(error);
+  }
+});
+
+router.get("/one/:roomId", async (req, res) => {
+  try {
+    const roomsData = await prisma.room.findUnique({
+      where: {
+        id: Number(req.params.roomId),
+      },
+    });
+
+    res.status(200).json(roomsData);
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 module.exports = router;

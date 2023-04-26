@@ -1,4 +1,11 @@
-import { Badge, Box, Drawer, IconButton, styled } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Drawer,
+  IconButton,
+  styled,
+  TextField,
+} from "@mui/material";
 
 const drawerWidth = "324px";
 
@@ -95,4 +102,10 @@ export const AddChannelButton = styled(IconButton)(({ theme }) => ({
   background: "#252329",
   width: "32px",
   height: "32px",
+}));
+
+export const SearchTextField = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-root": {
+    height: "48px",
+  },
 }));

@@ -11,13 +11,7 @@ import { ToastContainer } from "react-toastify";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 import { AuthProvider } from "react-auth-kit";
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -28,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       // cookieSecure={window.location.protocol === "https:"}
       cookieSecure={false}
     >
-      <ToastContainer />
+      <ToastContainer theme="dark" icon={false} hideProgressBar />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <ThemeProvider theme={theme}>

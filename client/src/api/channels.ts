@@ -22,5 +22,23 @@ export const createChannel = async (data: ChannelType) => {
     name: data.name,
     description: data.description,
   };
-  await axios.post(`${API_URL}/room/create`, body, { headers });
+  return await axios.post(`${API_URL}/room/create`, body, { headers });
+};
+
+interface JoinChannelType {
+  token: string;
+  roomId: string | number;
+}
+export const joinChannel = async (data: JoinChannelType) => {
+  const headers = {
+    Authorization: data.token,
+  };
+
+  return await axios.post(
+    `${API_URL}/room/join/${data.roomId}`,
+    {},
+    {
+      headers,
+    }
+  );
 };

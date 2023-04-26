@@ -7,7 +7,6 @@ module.exports = (req, res, next) => {
       process.env.JWT_KEY
     );
     req.userData = decodedData;
-    console.log(req.userData);
 
     next();
   } catch (error) {

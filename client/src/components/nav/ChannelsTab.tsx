@@ -22,31 +22,30 @@ import {
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
-import { createChannel, fetchAllChannels } from "src/api/channels";
+import { toast } from "react-toastify";
+import { createChannel, fetchAllChannels, joinChannel } from "src/api/channels";
 import * as Yup from "yup";
 import { useDrawer } from "../../context/drawer";
 import { useToggle } from "../../hooks/useToggle";
-import { AddChannelButton } from "./styles";
-
-const SearchTextField = styled(TextField)(({ theme }) => ({
-  "& .MuiInputBase-root": {
-    height: "48px",
-  },
-}));
+import { AddChannelButton, SearchTextField } from "./styles";
 
 const ChannelsTab = () => {
   const authHeader = useAuthHeader();
   const auth = useAuthUser();
+  const { channel: channelId } = useParams();
 
   const { setTabValue } = useDrawer();
   const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
   const { mutate: mutateChannel, isLoading: isCreatingChannel } =
     useMutation(createChannel);
+
+  const { mutate: joinChannelMutate, isLoading: isJoiningChannel } =
+    useMutation(joinChannel);
   const queryClient = useQueryClient();
 
   const [openChannelForm, toggleChannelForm] = useToggle();
@@ -55,9 +54,26 @@ const ChannelsTab = () => {
 
   const navigate = useNavigate();
 
-  const handleListItemClick = (channelId: string | number) => {
-    setTabValue("2");
-    navigate(`/${channelId}`);
+  const [selectedListItem, setSelectedListItem] = useState<number>(0);
+
+  const handleListItemClick = (channelId: number) => {
+    setSelectedListItem(Number(channelId));
+    const body = {
+      roomId: channelId,
+      token: authHeader(),
+    };
+
+    joinChannelMutate(body, {
+      onSuccess: ({ data }) => {
+        toast.success(data?.message);
+        setTabValue("2");
+        navigate(`/${channelId}`);
+      },
+
+      onError: () => {
+        toast.error("something went wrong try again");
+      },
+    });
   };
 
   const handleAddNewChannelClick = () => {
@@ -79,7 +95,7 @@ const ChannelsTab = () => {
         .min(24, "Meaningful Description with atleast 24 characters")
         .max(
           100,
-          " description must contain with atleast 100 or less characters"
+          "description must contain with atleast 100 or less characters"
         ),
     }),
     onSubmit: (values, { resetForm }) => {
@@ -87,9 +103,8 @@ const ChannelsTab = () => {
       mutateChannel(body, {
         onSuccess() {
           queryClient.invalidateQueries("channels");
-          toggleChannelForm();
           resetForm();
-
+          toggleChannelForm();
           //scolling channel list to bottom
 
           channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -162,7 +177,6 @@ const ChannelsTab = () => {
       <Box
         sx={{
           position: "absolute",
-
           height: "calc(100% - 78px)",
           overflow: "auto",
         }}
@@ -206,16 +220,18 @@ const ChannelsTab = () => {
                   onClick={() => handleListItemClick(id)}
                 >
                   <ListItemAvatar>
-                    <Avatar src="/" alt={name.toUpperCase()}></Avatar>
+                    <Avatar src="" alt={name.toUpperCase()}></Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={name} />
+                  {selectedListItem === Number(id) && isJoiningChannel && (
+                    <Typography variant="caption">Joining...</Typography>
+                  )}
                 </ListItemButton>
               </ListItem>
             ))}
-
-            <div ref={channelsEndRef} />
           </List>
         )}
+        <div ref={channelsEndRef} />
       </Box>
     </>
   );
