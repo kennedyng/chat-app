@@ -24,6 +24,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.10.0",
     "react-spinners": "^0.13.8",
+    "react-toastify": "^9.1.2",
     "sort-by": "^0.0.2",
     "yup": "^1.1.1"
   },

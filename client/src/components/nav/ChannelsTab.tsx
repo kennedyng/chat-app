@@ -1,39 +1,37 @@
-import {
-  Toolbar,
-  Stack,
-  Typography,
-  IconButton,
-  Box,
-  TextField,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  InputAdornment,
-  useTheme,
-  styled,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
-  Button,
-} from "@mui/material";
-import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { useDrawer } from "../../context/drawer";
-import { AddChannelButton } from "./styles";
-import { useToggle } from "../../hooks/useToggle";
-import { useMutation, useQuery } from "react-query";
-import { createChannel, fetchAllChannels } from "src/api/channels";
-import { PuffLoader } from "react-spinners";
-import { useNavigate, useNavigation } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { LoadingButton } from "@mui/lab";
+import {
+  Avatar,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Stack,
+  styled,
+  TextField,
+  Toolbar,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useFormik } from "formik";
+import { useRef } from "react";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { PuffLoader } from "react-spinners";
+import { createChannel, fetchAllChannels } from "src/api/channels";
+import * as Yup from "yup";
+import { useDrawer } from "../../context/drawer";
+import { useToggle } from "../../hooks/useToggle";
+import { AddChannelButton } from "./styles";
 
 const SearchTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-root": {
@@ -43,16 +41,17 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 
 const ChannelsTab = () => {
   const authHeader = useAuthHeader();
-
   const auth = useAuthUser();
-  const { setTabValue } = useDrawer();
 
+  const { setTabValue } = useDrawer();
   const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
   const { mutate: mutateChannel, isLoading: isCreatingChannel } =
     useMutation(createChannel);
+  const queryClient = useQueryClient();
 
   const [openChannelForm, toggleChannelForm] = useToggle();
   const theme = useTheme();
+  const channelsEndRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
@@ -83,11 +82,17 @@ const ChannelsTab = () => {
           " description must contain with atleast 100 or less characters"
         ),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       const body = { ...values, id: String(auth()?.id), token: authHeader() };
       mutateChannel(body, {
-        onSuccess(data) {
+        onSuccess() {
+          queryClient.invalidateQueries("channels");
           toggleChannelForm();
+          resetForm();
+
+          //scolling channel list to bottom
+
+          channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
         },
       });
     },
@@ -154,7 +159,14 @@ const ChannelsTab = () => {
         </DialogContent>
       </Dialog>
 
-      <Box>
+      <Box
+        sx={{
+          position: "absolute",
+
+          height: "calc(100% - 78px)",
+          overflow: "auto",
+        }}
+      >
         <Box sx={{ px: 2, py: 1.5 }}>
           <SearchTextField
             InputProps={{
@@ -186,7 +198,7 @@ const ChannelsTab = () => {
 
         {isSuccess && (
           <List>
-            {data.map(({ name, description, id }: any) => (
+            {data.map(({ name, id }: any) => (
               <ListItem dense key={id} disableGutters>
                 <ListItemButton
                   disableRipple
@@ -200,6 +212,8 @@ const ChannelsTab = () => {
                 </ListItemButton>
               </ListItem>
             ))}
+
+            <div ref={channelsEndRef} />
           </List>
         )}
       </Box>

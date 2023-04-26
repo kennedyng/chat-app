@@ -6,10 +6,18 @@ import App from "./App";
 import DrawerProvider from "./context/drawer";
 import "./index.css";
 import { theme } from "./theme";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 import { AuthProvider } from "react-auth-kit";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -20,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       // cookieSecure={window.location.protocol === "https:"}
       cookieSecure={false}
     >
+      <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <ThemeProvider theme={theme}>

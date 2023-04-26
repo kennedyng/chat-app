@@ -20,7 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
 import * as Yup from "yup";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { loginUser } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 
@@ -33,6 +33,7 @@ const LoginPage = () => {
     isLoading,
     mutate: loginMutate,
     isError,
+    status,
     error,
   } = useMutation(loginUser, {
     onSuccess({ data }) {
