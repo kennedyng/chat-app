@@ -29,20 +29,6 @@ import { useToggle } from "../../hooks/useToggle";
 import { useQuery } from "react-query";
 import { fetchAllChannels } from "src/api/channels";
 import { PuffLoader } from "react-spinners";
-const channels = [
-  {
-    title: "welcome",
-    label: "w",
-  },
-  {
-    title: "Front End",
-    label: "FE",
-  },
-  {
-    title: "Money Making",
-    label: "ME",
-  },
-];
 
 const SearchTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-root": {
@@ -53,7 +39,7 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 const ChannelsTab = () => {
   const { setTabValue } = useDrawer();
 
-  const { data, isLoading } = useQuery("channels", fetchAllChannels);
+  const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
 
   console.log(data);
 
@@ -142,7 +128,7 @@ const ChannelsTab = () => {
           </Box>
         )}
 
-        {!isLoading && data && (
+        {isSuccess && (
           <List>
             {data.map(({ name, description, id }: any) => (
               <ListItem dense key={id} disableGutters>

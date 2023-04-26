@@ -10,7 +10,6 @@ const drawerWidth = "324px";
 
 const RootLayout = () => {
   const [isDrawerOpen, toggleDrawer] = useToggle();
-
   const theme = useTheme();
 
   return (
