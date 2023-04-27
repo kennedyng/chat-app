@@ -66,8 +66,11 @@ const ChannelsTab = () => {
 
     joinChannelMutate(body, {
       onSuccess: ({ data }) => {
-        toast.success(data?.message);
+        toast.success(data.message);
+
+        //swapping the sidebar tab to members tab
         setTabValue("2");
+
         navigate(`/${channelId}`);
       },
 
