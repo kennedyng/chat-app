@@ -11,18 +11,20 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useDrawer } from "../../context/drawer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { StyledBadge } from "./styles";
+import { Loader, StyledBadge } from "./styles";
 import { useQuery } from "react-query";
 import { getChannelData } from "src/api/channels";
 import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
 
 const MembersTab = () => {
+  const theme = useTheme();
   const { setTabValue } = useDrawer();
 
   const authHeader = useAuthHeader();
@@ -33,11 +35,6 @@ const MembersTab = () => {
     isSuccess,
   } = useQuery("groupMembers", () =>
     getChannelData({ roomId: Number(channel), token: String(authHeader()) })
-  );
-
-  console.log(
-    "channel Data ===> ",
-    channelData?.members.map((i: any) => i.User?.profile?.name)
   );
 
   return (
@@ -56,7 +53,7 @@ const MembersTab = () => {
         </Stack>
       </Toolbar>
 
-      {isFetchingChannelData && <div>Loading...</div>}
+      {isFetchingChannelData && <Loader color={theme.palette.primary.main} />}
 
       {isSuccess && (
         <>
@@ -82,7 +79,10 @@ const MembersTab = () => {
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
                         variant="dot"
                       >
-                        <Avatar alt="Remy Sharp" />
+                        <Avatar
+                          alt="Remy Sharp"
+                          src={member.User?.profile?.img_url}
+                        />
                       </StyledBadge>
                     </ListItemAvatar>
                     <ListItemText primary={member.User?.profile?.name} />

@@ -177,27 +177,26 @@ const ChannelsTab = () => {
           </form>
         </DialogContent>
       </Dialog>
+      {isLoading && <Loader color={theme.palette.primary.main} />}
+      {isSuccess && (
+        <ListContent>
+          <Box sx={{ px: 2, py: 1.5 }}>
+            <SearchTextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              type="search"
+              placeholder="Search"
+              fullWidth
+              margin="dense"
+              variant="outlined"
+            />
+          </Box>
 
-      <ListContent>
-        <Box sx={{ px: 2, py: 1.5 }}>
-          <SearchTextField
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            type="search"
-            placeholder="Search"
-            fullWidth
-            margin="dense"
-            variant="outlined"
-          />
-        </Box>
-        {isLoading && <Loader color={theme.palette.primary.main} />}
-
-        {isSuccess && (
           <List>
             {data.map(({ name, id }: any) => (
               <ListItem dense key={id} disableGutters>
@@ -207,7 +206,9 @@ const ChannelsTab = () => {
                   onClick={() => handleListItemClick(id)}
                 >
                   <ListItemAvatar>
-                    <Avatar src="" alt={name.toUpperCase()}></Avatar>
+                    <Avatar sx={{ textTransform: "uppercase" }}>
+                      {name?.charAt(0)}
+                    </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={name} />
                   {selectedListItem === Number(id) && isJoiningChannel && (
@@ -217,9 +218,10 @@ const ChannelsTab = () => {
               </ListItem>
             ))}
           </List>
-        )}
-        <div ref={channelsEndRef} />
-      </ListContent>
+
+          <div ref={channelsEndRef} />
+        </ListContent>
+      )}
     </>
   );
 };
