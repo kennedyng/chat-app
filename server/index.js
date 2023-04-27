@@ -22,6 +22,8 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
+
+module.exports = app;
