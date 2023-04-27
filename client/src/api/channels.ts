@@ -29,6 +29,7 @@ interface JoinChannelType {
   token: string;
   roomId: string | number;
 }
+
 export const joinChannel = async (data: JoinChannelType) => {
   const headers = {
     Authorization: data.token,
@@ -41,4 +42,19 @@ export const joinChannel = async (data: JoinChannelType) => {
       headers,
     }
   );
+};
+interface ChannelDataType {
+  roomId: string | number;
+  token: string;
+}
+
+export const getChannelData = async (data: ChannelDataType) => {
+  const headers = {
+    Authorization: data.token,
+  };
+
+  const res = await axios.get(`${API_URL}/room/one/${data.roomId}`, {
+    headers,
+  });
+  return res.data;
 };

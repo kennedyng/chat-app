@@ -71,16 +71,40 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/one/:roomId", async (req, res) => {
+router.get("/one/:roomId", checkAuth, async (req, res) => {
   try {
-    const roomsData = await prisma.room.findUnique({
+    const members = await prisma.usersJoinedRoom.findMany({
       where: {
-        id: Number(req.params.roomId),
+        roomId: Number(req.params.roomId),
+      },
+
+      include: {
+        User: {
+          include: {
+            profile: true,
+          },
+        },
       },
     });
 
-    res.status(200).json(roomsData);
+    const roomData = await prisma.usersJoinedRoom.findFirst({
+      where: {
+        roomId: Number(req.params.roomId),
+        id: Number(req.userData.id),
+      },
+      include: {
+        Room: {
+          include: {
+            messages: true,
+          },
+        },
+        User: true,
+      },
+    });
+
+    res.status(200).json({ ...roomData, members });
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 });

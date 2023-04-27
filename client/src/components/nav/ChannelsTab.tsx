@@ -55,7 +55,6 @@ const ChannelsTab = () => {
   const channelsEndRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
-
   const [selectedListItem, setSelectedListItem] = useState<number>(0);
 
   const handleListItemClick = (channelId: number) => {
