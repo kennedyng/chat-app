@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const cors = require("cors");
 
 const bodyParser = require("body-parser");
@@ -9,7 +11,7 @@ const port = 3000;
 
 const userRouter = require("./routes/user");
 const roomRouter = require("./routes/room");
-const messageRouter = require("./routes/user");
+const messageRouter = require("./routes/message");
 
 app.use(express.json());
 // parse application/x-www-form-urlencoded
@@ -22,7 +24,14 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-app.listen(process.env.PORT || port, () => {
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://127.0.0.1:5173",
+  },
+});
+
+server.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
 

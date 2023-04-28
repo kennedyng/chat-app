@@ -24,12 +24,14 @@ import { useFormik } from "formik";
 import { useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createChannel, fetchAllChannels, joinChannel } from "src/api/channels";
+import { useDrawer } from "src/context/drawer";
+import { useToggle } from "src/hooks/useToggle";
+import { DescriptionValidation, NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
-import { useDrawer } from "../../context/drawer";
-import { useToggle } from "../../hooks/useToggle";
+
 import {
   AddChannelButton,
   ListContent,
@@ -67,10 +69,8 @@ const ChannelsTab = () => {
     joinChannelMutate(body, {
       onSuccess: ({ data }) => {
         toast.success(data.message);
-
         //swapping the sidebar tab to members tab
         setTabValue("2");
-
         navigate(`/${channelId}`);
       },
 
@@ -90,17 +90,8 @@ const ChannelsTab = () => {
       description: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string()
-        .max(20, "name must contain less than 20 characters")
-        .min(2, "name must contain atleast two characters")
-        .required("Required"),
-      description: Yup.string()
-        .required("no description is provided")
-        .min(24, "Meaningful Description with atleast 24 characters")
-        .max(
-          100,
-          "description must contain with atleast 100 or less characters"
-        ),
+      name: NameValidation,
+      description: DescriptionValidation,
     }),
     onSubmit: (values, { resetForm }) => {
       const body = { ...values, id: String(auth()?.id), token: authHeader() };

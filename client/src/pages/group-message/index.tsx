@@ -7,7 +7,15 @@ import {
   InputAdornment,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
+import { useFormik } from "formik";
+import { useAuthHeader } from "react-auth-kit";
+import { useMutation, useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { getChannelMessages } from "src/api/channels";
+import { addMessage } from "src/api/message";
+import { Loader } from "src/components/nav/styles";
 import { MessagesContent, MessageTextField, SendButton } from "./styles";
 
 const messages = [
@@ -66,6 +74,44 @@ const MessageRender: React.FC<MessageProps> = ({
 };
 
 const GroupMessagePage = () => {
+  const theme = useTheme();
+  const authHeader = useAuthHeader();
+  const { channel } = useParams();
+  const { mutate: messageMutate } = useMutation(addMessage);
+  const {
+    isSuccess: isChannelMsgSuccess,
+    data: channelMessages,
+    isLoading: isGetingChannelMsgs,
+  } = useQuery("channelMsg", () =>
+    getChannelMessages({ roomId: Number(channel ?? 1) })
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      message: "",
+    },
+
+    onSubmit: ({ message }, { resetForm }) => {
+      resetForm();
+
+      const body = {
+        token: authHeader(),
+        roomId: Number(channel),
+        message,
+      };
+
+      messageMutate(body, {
+        onSuccess(data) {
+          console.log("message saved", data);
+        },
+
+        onError(data) {
+          console.log("eeror", data);
+        },
+      });
+    },
+  });
+
   return (
     <Stack
       sx={{
@@ -73,46 +119,47 @@ const GroupMessagePage = () => {
         pt: 2,
       }}
     >
-      <MessagesContent>
-        {messages.map((message) => (
-          <MessageRender key={message.id} {...message} />
-        ))}
+      {isGetingChannelMsgs && (
+        <Box
+          sx={{
+            height: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Loader color={theme.palette.primary.main} />
+        </Box>
+      )}
+      {isChannelMsgSuccess && (
+        <MessagesContent>
+          {channelMessages.data?.map((message: any) => (
+            <MessageRender key={message.id} {...message} />
+          ))}
 
-        <Divider>
-          <Typography>today 12 feb</Typography>
-        </Divider>
+          <Divider>
+            <Typography>today 12 feb</Typography>
+          </Divider>
+        </MessagesContent>
+      )}
 
-        {messages.map((message) => (
-          <MessageRender key={message.id} {...message} />
-        ))}
-
-        {messages.map((message) => (
-          <MessageRender key={message.id} {...message} />
-        ))}
-
-        <Divider>
-          <Typography>today 12 feb</Typography>
-        </Divider>
-
-        {messages.map((message) => (
-          <MessageRender key={message.id} {...message} />
-        ))}
-      </MessagesContent>
-
-      <MessageTextField
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <SendButton>
-                <SendIcon fontSize="small" />
-              </SendButton>
-            </InputAdornment>
-          ),
-        }}
-        placeholder="Type a message here"
-        fullWidth
-        variant="outlined"
-      />
+      <form onSubmit={formik.handleSubmit}>
+        <MessageTextField
+          {...formik.getFieldProps("message")}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SendButton type="submit">
+                  <SendIcon fontSize="small" />
+                </SendButton>
+              </InputAdornment>
+            ),
+          }}
+          placeholder="Type a message here"
+          fullWidth
+          variant="outlined"
+        />
+      </form>
     </Stack>
   );
 };

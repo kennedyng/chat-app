@@ -30,9 +30,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDrawer } from "../../context/drawer";
 import { useSignOut } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -45,7 +47,11 @@ const DraweContent = () => {
   const handleSignOut = () => {
     signOut();
 
-    console.log("signing out");
+    setAnchorEl(null);
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
     setAnchorEl(null);
   };
   const handleClose = () => {
@@ -105,7 +111,7 @@ const DraweContent = () => {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
         <Divider />
         <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
       </Menu>
