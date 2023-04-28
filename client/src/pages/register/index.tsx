@@ -27,7 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import { useSignIn } from "react-auth-kit";
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
   const {
@@ -68,7 +68,7 @@ const LoginPage = () => {
   return (
     <Box>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
-        Log In
+        Register
       </Typography>
 
       <Collapse in={isError}>
@@ -125,7 +125,7 @@ const LoginPage = () => {
           variant="contained"
           fullWidth
         >
-          <span>Login</span>
+          <span>Register</span>
         </LoadingButton>
       </Box>
 
@@ -133,24 +133,14 @@ const LoginPage = () => {
         <Typography>or</Typography>
       </Divider>
 
-      <Stack spacing={2}>
-        <Button startIcon={<GoogleIcon />} fullWidth variant="outlined">
-          continue with Google
-        </Button>
-
-        <Button fullWidth variant="outlined">
-          continue as a guest
-        </Button>
-      </Stack>
-
       <Typography sx={{ mt: 2 }} textAlign="center">
-        Don't have an account yet?{" "}
-        <MuiLink component={Link} to="/auth/register">
-          Register
+        Already have an account?{" "}
+        <MuiLink component={Link} to="/auth/login">
+          Login
         </MuiLink>
       </Typography>
     </Box>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

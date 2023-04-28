@@ -13,6 +13,7 @@ import ProfilePage from "./pages/profile";
 import LoginPage from "./pages/login";
 import GroupMessagePage from "./pages/group-message";
 import { RequireAuth, useIsAuthenticated } from "react-auth-kit";
+import RegisterPage from "./pages/register";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
 
         <Route path="auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Route>
 
         <Route
