@@ -37,7 +37,7 @@ const LoginPage = () => {
     status,
     error,
   } = useMutation(loginUser, {
-    onSuccess({ data }) {
+    onSuccess(data) {
       if (
         signIn({
           token: data.token,
@@ -50,6 +50,8 @@ const LoginPage = () => {
       }
     },
   });
+
+  const userLoginError = error as any;
 
   const formik = useFormik({
     initialValues: {
@@ -71,7 +73,7 @@ const LoginPage = () => {
         Log In
       </Typography>
 
-      <Collapse in={isError}>
+      <Collapse in={isError && userLoginError?.response?.status === 403}>
         <Alert severity="error">
           <AlertTitle>Auth Failed</AlertTitle>
           Invalid Email or Password — <strong>check it out!</strong>

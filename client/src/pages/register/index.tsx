@@ -1,55 +1,41 @@
 import {
   Alert,
   AlertTitle,
-  Button,
   Collapse,
   Divider,
-  Fade,
   InputAdornment,
   Link as MuiLink,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import GoogleIcon from "@mui/icons-material/Google";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
-import * as Yup from "yup";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { loginUser } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
+import { useMutation } from "react-query";
+import { bodyType, registerUser } from "src/api/user";
+import * as Yup from "yup";
 
-import { useSignIn } from "react-auth-kit";
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
 
 const RegisterPage = () => {
-  const signIn = useSignIn();
-  const navigate = useNavigate();
   const {
     isLoading,
-    mutate: loginMutate,
+    mutate: registerMutate,
     isError,
-    status,
+    isSuccess,
     error,
-  } = useMutation(loginUser, {
-    onSuccess({ data }) {
-      if (
-        signIn({
-          token: data.token,
-          tokenType: "Bearer",
-          expiresIn: 60,
-          authState: { id: data.id },
-        })
-      ) {
-        navigate("/");
-      }
+  } = useMutation(registerUser, {
+    onSuccess(data) {
+      console.log(data);
     },
   });
+
+  const registerUserError = error as any;
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +47,7 @@ const RegisterPage = () => {
       password: PasswordValidation,
     }),
     onSubmit: (values) => {
-      loginMutate(values);
+      registerMutate(values);
     },
   });
 
@@ -71,10 +57,23 @@ const RegisterPage = () => {
         Register
       </Typography>
 
-      <Collapse in={isError}>
+      <Collapse in={isError && registerUserError?.response.status === 409}>
         <Alert severity="error">
-          <AlertTitle>Auth Failed</AlertTitle>
-          Invalid Email or Password — <strong>check it out!</strong>
+          <AlertTitle>{registerUserError?.response.statusText}</AlertTitle>
+          {registerUserError?.response.data.message} —{" "}
+          <strong>check it out!</strong>
+        </Alert>
+      </Collapse>
+
+      <Collapse in={isSuccess}>
+        <Alert severity="success">
+          <AlertTitle>Registed Successfully</AlertTitle>
+          You can now log in —{" "}
+          <MuiLink component={Link} to="/auth/login">
+            <Typography component="strong" sx={{ textDecoration: "underline" }}>
+              Login
+            </Typography>
+          </MuiLink>
         </Alert>
       </Collapse>
 

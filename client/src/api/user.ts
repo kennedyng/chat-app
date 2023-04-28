@@ -1,10 +1,17 @@
 import axios from "axios";
 import { API_URL } from ".";
 
-interface bodyType {
+export interface bodyType {
   email: string;
   password: string;
 }
 
-export const loginUser = (body: bodyType) =>
-  axios.post(`${API_URL}/user/login/`, body);
+export const loginUser = async (body: bodyType): Promise<any> => {
+  const res = await axios.post(`${API_URL}/user/login/`, body);
+  return res.data;
+};
+
+export const registerUser = async (body: bodyType): Promise<any> => {
+  const res = await axios.post(`${API_URL}/user/register/`, body);
+  return res.data;
+};
