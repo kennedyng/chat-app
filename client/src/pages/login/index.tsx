@@ -34,6 +34,7 @@ const LoginPage = () => {
     isLoading,
     mutate: loginMutate,
     isError,
+    data,
     status,
     error,
   } = useMutation(loginUser, {
@@ -52,6 +53,13 @@ const LoginPage = () => {
   });
 
   const userLoginError = error as any;
+
+  const handleTesterLogin = () => {
+    loginMutate({
+      email: "Test@test.com",
+      password: "ThinkIn2050Rich",
+    });
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -135,15 +143,14 @@ const LoginPage = () => {
         <Typography>or</Typography>
       </Divider>
 
-      <Stack spacing={2}>
-        <Button startIcon={<GoogleIcon />} fullWidth variant="outlined">
-          continue with Google
-        </Button>
-
-        <Button fullWidth variant="outlined">
-          continue as a guest
-        </Button>
-      </Stack>
+      <LoadingButton
+        onClick={handleTesterLogin}
+        loading={isLoading}
+        variant="outlined"
+        fullWidth
+      >
+        <span>continue as a Tester</span>
+      </LoadingButton>
 
       <Typography sx={{ mt: 2 }} textAlign="center">
         Don't have an account yet?{" "}
