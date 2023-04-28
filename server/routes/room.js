@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
 
 const checkAuth = require("../middlewares/checkAuth");
-
+//new instance
 const prisma = new PrismaClient();
 
 router.post("/create", checkAuth, async (req, res) => {
