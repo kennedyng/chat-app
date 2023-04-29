@@ -129,13 +129,14 @@ const ChannelsTab = () => {
         </Stack>
       </Toolbar>
 
-      <Dialog open={openChannelForm} onClose={toggleChannelForm}>
+      <Dialog keepMounted open={openChannelForm} onClose={toggleChannelForm}>
         <DialogTitle>
           <Typography fontWeight={700}>NEW CHANNEL</Typography>
         </DialogTitle>
         <DialogContent>
           <form onSubmit={formik.handleSubmit}>
             <TextField
+              autoFocus
               {...formik.getFieldProps("name")}
               placeholder="Channel name"
               margin="normal"
@@ -146,6 +147,8 @@ const ChannelsTab = () => {
               helperText={formik.errors.name}
             />
             <TextField
+              id="description"
+              autoFocus
               error={
                 Boolean(formik.touched.description) &&
                 Boolean(formik.errors.description)

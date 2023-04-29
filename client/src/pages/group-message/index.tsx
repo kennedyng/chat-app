@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
+import * as dayjs from "dayjs";
 import { useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -18,6 +19,9 @@ import { getChannelMessages } from "src/api/channels";
 import { addMessage } from "src/api/message";
 import { Loader } from "src/components/nav/styles";
 import { MessagesContent, MessageTextField, SendButton } from "./styles";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const messages = [
   {
@@ -64,7 +68,7 @@ const MessageRender: React.FC<MessageProps> = ({
         >
           <Typography fontWeight={700}>{author} </Typography>
           <Typography fontWeight={700} fontSize={14}>
-            {createdAt}
+            {dayjs(createdAt).fromNow()}
           </Typography>
         </Stack>
 
@@ -84,9 +88,10 @@ const GroupMessagePage = () => {
     isSuccess: isChannelMsgSuccess,
     data: channelMessages,
     isLoading: isGetingChannelMsgs,
-  } = useQuery("channelMsg", () =>
-    getChannelMessages({ roomId: Number(channel ?? 1) })
-  );
+  } = useQuery({
+    queryKey: ["channelMsg", { channelId: channel }],
+    queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -98,7 +103,7 @@ const GroupMessagePage = () => {
 
       const body = {
         token: authHeader(),
-        roomId: Number(channel),
+        roomId: Number(channel ?? 1),
         message,
       };
 

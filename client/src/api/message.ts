@@ -13,7 +13,7 @@ export const addMessage = async (data: MessageType): Promise<any> => {
   };
 
   const res = await axios.post(
-    `${API_URL}/room/message/create`,
+    `${API_URL}/message/create`,
     { message: data.message, roomId: data.roomId },
     {
       headers,

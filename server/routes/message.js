@@ -6,6 +6,7 @@ const router = require("express").Router();
 
 router.post("/create", checkAuth, async (req, res) => {
   try {
+    console.log("creating a message", req.body);
     const data = await prisma.message.create({
       data: {
         roomId: Number(req.body.roomId),

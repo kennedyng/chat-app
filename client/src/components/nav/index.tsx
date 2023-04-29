@@ -82,12 +82,7 @@ const DraweContent = () => {
 
       <BottomUserActions>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar
-            sx={{ width: "42px", height: "42px" }}
-            src={
-              userProfileQuery.isSuccess && userProfileQuery.data?.data?.img_url
-            }
-          />
+          <Avatar sx={{ width: "42px", height: "42px" }} />
           <Typography
             fontWeight={700}
             color="text.secondary"
@@ -138,6 +133,7 @@ const DraweContent = () => {
 
 const Nav = () => {
   const { open, toggleDrawer } = useDrawer();
+
   return (
     <>
       <AppBar color="transparent" position="fixed">
