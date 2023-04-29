@@ -58,4 +58,18 @@ module.exports = {
       res.status(500).json({ error });
     }
   },
+
+  getProfile: async (req, res) => {
+    try {
+      const data = await prisma.userProfile.findUnique({
+        where: {
+          userId: Number(req.userData.id),
+        },
+      });
+
+      return res.status(200).json({ data });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
 };

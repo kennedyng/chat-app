@@ -29,12 +29,21 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { useDrawer } from "../../context/drawer";
-import { useSignOut } from "react-auth-kit";
+import { useAuthHeader, useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getUserProfile } from "src/api/user";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
   const navigate = useNavigate();
+  const authHeader = useAuthHeader();
+
+  const userProfileQuery = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: () => getUserProfile(authHeader()),
+  });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -46,7 +55,6 @@ const DraweContent = () => {
 
   const handleSignOut = () => {
     signOut();
-
     setAnchorEl(null);
   };
 
@@ -74,9 +82,18 @@ const DraweContent = () => {
 
       <BottomUserActions>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar sx={{ width: "42px", height: "42px" }} alt="I"></Avatar>
-          <Typography fontWeight={700} color="text.secondary">
-            Xanthe Neal
+          <Avatar
+            sx={{ width: "42px", height: "42px" }}
+            src={
+              userProfileQuery.isSuccess && userProfileQuery.data?.data?.img_url
+            }
+          />
+          <Typography
+            fontWeight={700}
+            color="text.secondary"
+            sx={{ textTransform: "uppercase" }}
+          >
+            {userProfileQuery.isSuccess && userProfileQuery.data?.data?.name}
           </Typography>
         </Stack>
         <IconButton
