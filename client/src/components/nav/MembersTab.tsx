@@ -33,9 +33,11 @@ const MembersTab = () => {
     data: channelData,
     isLoading: isFetchingChannelData,
     isSuccess,
-  } = useQuery("groupMembers", () =>
-    getChannelData({ roomId: Number(channel), token: String(authHeader()) })
-  );
+  } = useQuery({
+    queryKey: ["groupMembers", channel],
+    queryFn: () =>
+      getChannelData({ roomId: Number(channel), token: String(authHeader()) }),
+  });
 
   return (
     <>

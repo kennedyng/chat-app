@@ -44,7 +44,10 @@ const ChannelsTab = () => {
   const auth = useAuthUser();
 
   const { setTabValue } = useDrawer();
-  const { data, isLoading, isSuccess } = useQuery("channels", fetchAllChannels);
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ["channels"],
+    queryFn: () => fetchAllChannels(),
+  });
   const { mutate: mutateChannel, isLoading: isCreatingChannel } =
     useMutation(createChannel);
 
@@ -97,7 +100,7 @@ const ChannelsTab = () => {
       const body = { ...values, id: String(auth()?.id), token: authHeader() };
       mutateChannel(body, {
         onSuccess() {
-          queryClient.invalidateQueries("channels");
+          queryClient.invalidateQueries(["channels"]);
           resetForm();
           toggleChannelForm();
           //scolling channel list to bottom

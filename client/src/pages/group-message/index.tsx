@@ -10,8 +10,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
+import { useEffect } from "react";
 import { useAuthHeader } from "react-auth-kit";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { getChannelMessages } from "src/api/channels";
 import { addMessage } from "src/api/message";
@@ -78,6 +79,7 @@ const GroupMessagePage = () => {
   const authHeader = useAuthHeader();
   const { channel } = useParams();
   const { mutate: messageMutate } = useMutation(addMessage);
+
   const {
     isSuccess: isChannelMsgSuccess,
     data: channelMessages,
