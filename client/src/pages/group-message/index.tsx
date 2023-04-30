@@ -19,9 +19,7 @@ import { getChannelMessages } from "src/api/channels";
 import { addMessage } from "src/api/message";
 import { Loader } from "src/components/nav/styles";
 import { MessagesContent, MessageTextField, SendButton } from "./styles";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-dayjs.extend(relativeTime);
+import moment from "moment";
 
 interface MessageProps {
   id: string | number;
@@ -52,7 +50,7 @@ const MessageRender: React.FC<MessageProps> = ({
         >
           <Typography fontWeight={700}>{author} </Typography>
           <Typography fontWeight={700} fontSize={14}>
-            {/* {dayjs(createdAt).fromNow()} */}
+            {moment(createdAt).fromNow()}
           </Typography>
         </Stack>
 

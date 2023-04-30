@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const cors = require("cors");
 
 const bodyParser = require("body-parser");
@@ -22,8 +24,15 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-app.listen(process.env.PORT || port, () => {
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://127.0.0.1:5173", "https://chat-app-lilac-xi.vercel.app/"],
+  },
+});
+
+server.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
 
-module.exports = app;
+module.exports = server;
