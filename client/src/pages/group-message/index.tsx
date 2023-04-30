@@ -52,7 +52,7 @@ const MessageRender: React.FC<MessageProps> = ({
         >
           <Typography fontWeight={700}>{author} </Typography>
           <Typography fontWeight={700} fontSize={14}>
-            {dayjs(createdAt).fromNow()}
+            {/* {dayjs(createdAt).fromNow()} */}
           </Typography>
         </Stack>
 
@@ -74,7 +74,7 @@ const GroupMessagePage = () => {
     isLoading: isGetingChannelMsgs,
   } = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
-    queryFn: () => getChannelMessages({ roomId: Number(channel || 1) }),
+    queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
   });
 
   const formik = useFormik({
@@ -87,7 +87,7 @@ const GroupMessagePage = () => {
 
       const body = {
         token: authHeader(),
-        roomId: Number(channel || 1),
+        roomId: Number(channel ?? 1),
         message,
       };
 
