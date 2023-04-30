@@ -23,22 +23,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-const messages = [
-  {
-    id: 1,
-    author: "Nellie Francis",
-    createdAt: "yesterday at 2:29 AM",
-    message: `Morbi eget turpis ut massa luctus cursus. Sed sit amet risus quis neque condimentum aliquet. Phasellus consequat et justo eu accumsan 🙌. Proin pretium id nunc eu molestie. Nam consectetur, ligula vel mattis facilisis, ex mauris venenatis nulla, eget tempor enim neque eget massa 🤣`,
-  },
-  {
-    id: 2,
-    author: "Nellie Francis",
-    createdAt: "yesterday at 2:29 AM",
-    message:
-      "Suspendisse enim tellus, elementum quis dictum sed, sodales at mauris 😀",
-  },
-];
-
 interface MessageProps {
   id: string | number;
   author: string;
