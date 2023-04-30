@@ -27,8 +27,7 @@ function App() {
             </RequireAuth>
           }
         >
-          {/* <Route index path=":channel?" element={<GroupMessagePage />} /> */}
-          <Route index path=":channel?" element={<div>Messages</div>} />
+          <Route index path=":channel?" element={<GroupMessagePage />} />
         </Route>
 
         <Route path="auth" element={<AuthLayout />}>

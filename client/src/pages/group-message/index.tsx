@@ -74,7 +74,7 @@ const GroupMessagePage = () => {
     isLoading: isGetingChannelMsgs,
   } = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
-    queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
+    queryFn: () => getChannelMessages({ roomId: Number(channel || 1) }),
   });
 
   const formik = useFormik({
@@ -87,7 +87,7 @@ const GroupMessagePage = () => {
 
       const body = {
         token: authHeader(),
-        roomId: Number(channel ?? 1),
+        roomId: Number(channel || 1),
         message,
       };
 
