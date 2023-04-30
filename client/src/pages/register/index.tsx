@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import LockIcon from "@mui/icons-material/Lock";
 import PersonIcon from "@mui/icons-material/Person";
@@ -35,6 +35,7 @@ const RegisterPage = () => {
     },
   });
 
+  const navigate = useNavigate();
   const registerUserError = error as any;
 
   const formik = useFormik({
@@ -47,7 +48,11 @@ const RegisterPage = () => {
       password: PasswordValidation,
     }),
     onSubmit: (values) => {
-      registerMutate(values);
+      registerMutate(values, {
+        onSuccess: () => {
+          navigate("/auth/set/profile");
+        },
+      });
     },
   });
 

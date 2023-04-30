@@ -10,8 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
-import * as dayjs from "dayjs";
-import { useEffect } from "react";
+
 import { useAuthHeader } from "react-auth-kit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -20,6 +19,7 @@ import { addMessage } from "src/api/message";
 import { Loader } from "src/components/nav/styles";
 import { MessagesContent, MessageTextField, SendButton } from "./styles";
 import moment from "moment";
+import { messageDivider } from "src/utils";
 
 interface MessageProps {
   id: string | number;
@@ -50,7 +50,7 @@ const MessageRender: React.FC<MessageProps> = ({
         >
           <Typography fontWeight={700}>{author} </Typography>
           <Typography fontWeight={700} fontSize={14}>
-            {moment(createdAt).fromNow()}
+            {moment(createdAt).calendar()}
           </Typography>
         </Stack>
 
@@ -123,12 +123,19 @@ const GroupMessagePage = () => {
       {isChannelMsgSuccess && (
         <MessagesContent>
           {channelMessages.data?.map((message: any) => (
-            <MessageRender key={message.id} {...message} />
+            <>
+              <Divider
+                sx={{
+                  display: messageDivider(message.createdAt) ? "flex" : "none",
+                }}
+              >
+                <Typography>
+                  {moment(message.createdAt).format("MMM Do YY")}
+                </Typography>
+              </Divider>
+              <MessageRender key={message.id} {...message} />
+            </>
           ))}
-
-          <Divider>
-            <Typography>today 12 feb</Typography>
-          </Divider>
         </MessagesContent>
       )}
 

@@ -72,4 +72,25 @@ module.exports = {
       return res.status(500).json({ error });
     }
   },
+
+  editProfile: async (req, res) => {
+    try {
+      console.log("editing");
+      const data = await prisma.userProfile.update({
+        where: {
+          userId: Number(req.userData.id),
+        },
+        data: {
+          name: req.body.name,
+          img_url: req.body.img_url,
+        },
+      });
+
+      return res
+        .status(201)
+        .json({ data, message: "profile created successfully" });
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  },
 };

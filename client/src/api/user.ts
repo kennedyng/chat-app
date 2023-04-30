@@ -27,3 +27,18 @@ export const getUserProfile = async (token: string): Promise<any> => {
 
   return res.data;
 };
+interface ProfileBodyType {
+  token: string;
+  name: string;
+  img_url?: string;
+}
+export const editUserProfile = async (body: ProfileBodyType): Promise<any> => {
+  const headers = {
+    Authorization: body.token,
+  };
+
+  const res = await axios.patch(`${API_URL}/user/profile/edit`, body, {
+    headers,
+  });
+  return res.data;
+};

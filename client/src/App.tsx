@@ -33,6 +33,14 @@ function App() {
         <Route path="auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route
+            path="set/profile"
+            element={
+              <RequireAuth loginPath="/auth/login">
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
         </Route>
 
         <Route
@@ -42,9 +50,7 @@ function App() {
               <AuthLayout />
             </RequireAuth>
           }
-        >
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
