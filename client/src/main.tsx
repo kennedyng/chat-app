@@ -19,8 +19,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       authType={"cookie"}
       authName={"_auth"}
       cookieDomain={window.location.hostname}
-      // cookieSecure={window.location.protocol === "https:"}
-      cookieSecure={false}
+      cookieSecure={window.location.protocol === "https:"}
     >
       <ToastContainer theme="dark" icon={false} hideProgressBar />
       <QueryClientProvider client={queryClient}>
