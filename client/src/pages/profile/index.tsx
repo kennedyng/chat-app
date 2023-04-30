@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -11,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import ManIcon from "@mui/icons-material/Man";
 import WomanIcon from "@mui/icons-material/Woman";
 
@@ -26,11 +27,31 @@ import { editUserProfile } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
 import { toast } from "react-toastify";
+import { useDropzone } from "react-dropzone";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const authHeader = useAuthHeader();
   const userProfileMutation = useMutation(editUserProfile);
+  const [profilePic, setProfilePic] = useState<any>(null);
+
+  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+    // Disable click and keydown behavior
+    noClick: true,
+    noKeyboard: true,
+    maxFiles: 1,
+    maxSize: 5000000,
+    accept: {
+      "image/png": [".png"],
+    },
+    onDrop: (acceptedFiles) => {
+      setProfilePic(
+        Object.assign(acceptedFiles[0], {
+          preview: URL.createObjectURL(acceptedFiles[0]),
+        })
+      );
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -72,16 +93,20 @@ const ProfilePage = () => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Box
+        <Avatar
+          src={profilePic?.preview}
           sx={{
-            background: "blue",
             width: { xs: "100%", md: 130 },
             height: 130,
           }}
-        >
-          Img
-        </Box>
-        <Typography>CHANGE PHOTO (optional)</Typography>
+        />
+
+        <div {...getRootProps({ className: "dropzone" })}>
+          <input {...getInputProps()} />
+        </div>
+        <Typography onClick={open} sx={{ cursor: "pointer" }}>
+          CHANGE PHOTO (optional)
+        </Typography>
       </Stack>
 
       <Typography marginTop={4}>Display Name</Typography>
