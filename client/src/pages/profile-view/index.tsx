@@ -45,7 +45,7 @@ const ProfileView = () => {
           sx={{ mb: 2 }}
         >
           <Typography variant="h5">Profile</Typography>
-          <Button component={Link} to="/auth/set/profile" variant="outlined">
+          <Button component={Link} to="/auth/edit/profile" variant="outlined">
             Edit
           </Button>
         </Stack>

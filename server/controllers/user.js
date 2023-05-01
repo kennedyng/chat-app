@@ -7,6 +7,10 @@ module.exports = {
         where: {
           email: req.body.email,
         },
+
+        include: {
+          profile: true,
+        },
       });
 
       if (user && user.password === req.body.password) {
@@ -20,9 +24,11 @@ module.exports = {
             expiresIn: "1h",
           }
         );
+
         return res.status(200).json({
           message: "authorization successfull",
           id: user.id,
+          profileCompleted: user?.profile?.name ? true : false,
           email: user.email,
           token,
         });
@@ -75,6 +81,7 @@ module.exports = {
 
   editProfile: async (req, res) => {
     try {
+      console.log(req.body);
       const data = await prisma.userProfile.update({
         where: {
           userId: Number(req.userData.id),

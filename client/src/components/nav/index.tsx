@@ -33,7 +33,6 @@ import { useAuthHeader, useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getUserProfile } from "src/api/user";
-import { ConstructionOutlined } from "@mui/icons-material";
 import { API_URL } from "src/api";
 
 const DraweContent = () => {

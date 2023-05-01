@@ -1,21 +1,13 @@
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Navigate,
-  Route,
-  RouterProvider,
-  Routes,
-} from "react-router-dom";
+import { RequireAuth } from "react-auth-kit";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthLayout from "./layout/auth";
 import RootLayout from "./layout/root";
-import DetailsPage from "./pages/details";
-import ProfilePage from "./pages/profile";
-import LoginPage from "./pages/login";
+import EditProfilePage from "./pages/edit-profile";
 import GroupMessagePage from "./pages/group-message";
-import { RequireAuth, useIsAuthenticated } from "react-auth-kit";
-import RegisterPage from "./pages/register";
+import LoginPage from "./pages/login";
 import ProfileView from "./pages/profile-view";
-import { Button } from "@mui/material";
+import RegisterPage from "./pages/register";
+import SetProfilePage from "./pages/set-profile";
 
 function App() {
   return (
@@ -47,7 +39,16 @@ function App() {
             path="set/profile"
             element={
               <RequireAuth loginPath="/auth/login">
-                <ProfilePage />
+                <SetProfilePage />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="edit/profile"
+            element={
+              <RequireAuth loginPath="/auth/login">
+                <EditProfilePage />
               </RequireAuth>
             }
           />

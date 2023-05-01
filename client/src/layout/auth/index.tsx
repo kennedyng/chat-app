@@ -21,6 +21,7 @@ const AuthLayout = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    minHeight: 300,
 
     [theme.breakpoints.up("xs")]: {
       width: "100%",
@@ -31,7 +32,7 @@ const AuthLayout = () => {
   }));
 
   return (
-    <Grid container sx={{ height: "100vh" }}>
+    <Grid container sx={{ height: { xs: "100%", md: "100vh" } }}>
       <ContentWrapper>
         <FormWrapper elevation={10}>
           <Outlet />
