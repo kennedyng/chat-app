@@ -123,7 +123,7 @@ const GroupMessagePage = () => {
       {isChannelMsgSuccess && (
         <MessagesContent>
           {channelMessages.data?.map((message: any) => (
-            <>
+            <Box key={message.id}>
               <Divider
                 sx={{
                   display: messageDivider(message.createdAt) ? "flex" : "none",
@@ -134,7 +134,7 @@ const GroupMessagePage = () => {
                 </Typography>
               </Divider>
               <MessageRender key={message.id} {...message} />
-            </>
+            </Box>
           ))}
         </MessagesContent>
       )}
