@@ -60,7 +60,7 @@ const DraweContent = () => {
   };
 
   const handleProfileClick = () => {
-    navigate("/profile");
+    navigate("/auth/view/profile");
     setAnchorEl(null);
   };
   const handleClose = () => {

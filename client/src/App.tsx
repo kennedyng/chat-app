@@ -14,6 +14,8 @@ import LoginPage from "./pages/login";
 import GroupMessagePage from "./pages/group-message";
 import { RequireAuth, useIsAuthenticated } from "react-auth-kit";
 import RegisterPage from "./pages/register";
+import ProfileView from "./pages/profile-view";
+import { Button } from "@mui/material";
 
 function App() {
   return (
@@ -33,6 +35,14 @@ function App() {
         <Route path="auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route
+            path="view/profile"
+            element={
+              <RequireAuth loginPath="/auth/login">
+                <ProfileView />
+              </RequireAuth>
+            }
+          />
           <Route
             path="set/profile"
             element={

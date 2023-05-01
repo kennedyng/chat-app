@@ -58,15 +58,13 @@ const ProfilePage = () => {
   const formik = useFormik({
     initialValues: {
       name: "",
-      img_url: "",
     },
 
     validationSchema: Yup.object({
       name: NameValidation,
-      img_url: Yup.string(),
     }),
 
-    onSubmit: ({ name, img_url }) => {
+    onSubmit: ({ name }) => {
       userProfileMutation.mutate(
         { name, token: authHeader() },
         {
@@ -82,12 +80,8 @@ const ProfilePage = () => {
           token: authHeader(),
         },
         {
-          onSuccess: () => {
-            console.log("pic uploaded");
-          },
-
           onError: () => {
-            console.log("failed to upload");
+            toast.error("something went wrong try again");
           },
         }
       );
@@ -95,7 +89,9 @@ const ProfilePage = () => {
   });
   return (
     <Box component="form" onSubmit={formik.handleSubmit} sx={{ flex: 1 }}>
-      <Collapse in={userProfileMutation.isSuccess}>
+      <Collapse
+        in={userProfileMutation.isSuccess && profilePicMutation.isSuccess}
+      >
         <Alert severity="success">
           <AlertTitle>Success</AlertTitle>
           {userProfileMutation.data?.message}
