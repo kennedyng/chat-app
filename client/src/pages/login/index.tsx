@@ -76,7 +76,7 @@ const LoginPage = () => {
   });
 
   return (
-    <Box>
+    <Box sx={{ p: { xs: 2, md: 8 } }}>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
         Log In
       </Typography>

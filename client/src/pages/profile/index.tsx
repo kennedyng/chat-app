@@ -22,8 +22,12 @@ import { useFormik } from "formik";
 
 import * as Yup from "yup";
 import { NameValidation } from "src/utils/validation";
-import { useMutation } from "react-query";
-import { createUserProfilePic, editUserProfile } from "src/api/user";
+import { useMutation, useQuery } from "react-query";
+import {
+  createUserProfilePic,
+  editUserProfile,
+  getUserProfile,
+} from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
 import { toast } from "react-toastify";
@@ -32,6 +36,7 @@ import { useDropzone } from "react-dropzone";
 const ProfilePage = () => {
   const navigate = useNavigate();
   const authHeader = useAuthHeader();
+
   const userProfileMutation = useMutation(editUserProfile);
   const profilePicMutation = useMutation(createUserProfilePic);
 
@@ -88,7 +93,11 @@ const ProfilePage = () => {
     },
   });
   return (
-    <Box component="form" onSubmit={formik.handleSubmit} sx={{ flex: 1 }}>
+    <Box
+      component="form"
+      onSubmit={formik.handleSubmit}
+      sx={{ p: { xs: 2, md: 8 }, flex: 1 }}
+    >
       <Collapse
         in={userProfileMutation.isSuccess && profilePicMutation.isSuccess}
       >

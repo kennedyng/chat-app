@@ -16,11 +16,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
 import { LoadingButton } from "@mui/lab";
-import { useMutation } from "react-query";
-import { bodyType, registerUser } from "src/api/user";
+import { useMutation, useQuery } from "react-query";
+import { bodyType, getUserProfile, registerUser } from "src/api/user";
 import * as Yup from "yup";
 
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
+import { useAuthHeader } from "react-auth-kit";
 
 const RegisterPage = () => {
   const {
@@ -57,7 +58,7 @@ const RegisterPage = () => {
   });
 
   return (
-    <Box>
+    <Box sx={{ p: { xs: 2, md: 8 } }}>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
         Register
       </Typography>

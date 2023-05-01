@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  IconButton,
   Stack,
   Typography,
   useTheme,
@@ -9,13 +10,15 @@ import {
 import React from "react";
 import { useAuthHeader } from "react-auth-kit";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { HashLoader, PuffLoader } from "react-spinners";
 import { API_URL } from "src/api";
 import { getUserProfile } from "src/api/user";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ProfileView = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const authHeader = useAuthHeader();
   const userProfileQuery = useQuery({
     queryKey: ["userProfile"],
@@ -27,8 +30,14 @@ const ProfileView = () => {
   }
 
   return (
-    <>
-      <Box sx={{ width: "100%" }}>
+    <Box sx={{ flex: 1 }}>
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{ position: "absolute", m: 1 }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <Box sx={{ p: { xs: 2, md: 8 } }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -51,7 +60,7 @@ const ProfileView = () => {
           {userProfileQuery.data?.data?.name}
         </Typography>
       </Box>
-    </>
+    </Box>
   );
 };
 

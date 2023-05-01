@@ -22,7 +22,6 @@ const AuthLayout = () => {
     justifyContent: "center",
     alignItems: "center",
 
-    padding: theme.spacing(8),
     [theme.breakpoints.up("xs")]: {
       width: "100%",
     },
