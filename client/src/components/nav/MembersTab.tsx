@@ -22,6 +22,7 @@ import { useQuery } from "react-query";
 import { getChannelData } from "src/api/channels";
 import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
+import { API_URL } from "src/api";
 
 const MembersTab = () => {
   const theme = useTheme();
@@ -82,8 +83,8 @@ const MembersTab = () => {
                         variant="dot"
                       >
                         <Avatar
-                          alt="Remy Sharp"
-                          src={member.User?.profile?.img_url}
+                          alt={member.User?.profile?.name}
+                          src={`${API_URL}/${member.User?.profile?.img_url}`}
                         />
                       </StyledBadge>
                     </ListItemAvatar>

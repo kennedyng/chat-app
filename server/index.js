@@ -16,7 +16,7 @@ const messageRouter = require("./routes/message");
 app.use(express.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use("/uploads/logo", express.static("uploads/logo"));
+app.use("/uploads/profile", express.static("uploads/profile"));
 
 app.use(cors());
 

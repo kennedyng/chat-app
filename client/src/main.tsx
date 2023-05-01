@@ -23,7 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     >
       <ToastContainer theme="dark" icon={false} hideProgressBar />
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <DrawerProvider>

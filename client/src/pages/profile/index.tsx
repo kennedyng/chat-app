@@ -23,7 +23,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NameValidation } from "src/utils/validation";
 import { useMutation } from "react-query";
-import { editUserProfile } from "src/api/user";
+import { createUserProfilePic, editUserProfile } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
 import { toast } from "react-toastify";
@@ -33,6 +33,8 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const authHeader = useAuthHeader();
   const userProfileMutation = useMutation(editUserProfile);
+  const profilePicMutation = useMutation(createUserProfilePic);
+
   const [profilePic, setProfilePic] = useState<any>(null);
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
@@ -66,10 +68,26 @@ const ProfilePage = () => {
 
     onSubmit: ({ name, img_url }) => {
       userProfileMutation.mutate(
-        { name, img_url, token: authHeader() },
+        { name, token: authHeader() },
         {
           onError: () => {
             toast.error("something went wrong try again");
+          },
+        }
+      );
+
+      profilePicMutation.mutate(
+        {
+          profilePic: acceptedFiles[0],
+          token: authHeader(),
+        },
+        {
+          onSuccess: () => {
+            console.log("pic uploaded");
+          },
+
+          onError: () => {
+            console.log("failed to upload");
           },
         }
       );
@@ -102,7 +120,7 @@ const ProfilePage = () => {
         />
 
         <div {...getRootProps({ className: "dropzone" })}>
-          <input {...getInputProps()} />
+          <input {...formik.getFieldProps("img_url")} {...getInputProps()} />
         </div>
         <Typography onClick={open} sx={{ cursor: "pointer" }}>
           CHANGE PHOTO (optional)

@@ -75,14 +75,12 @@ module.exports = {
 
   editProfile: async (req, res) => {
     try {
-      console.log("editing");
       const data = await prisma.userProfile.update({
         where: {
           userId: Number(req.userData.id),
         },
         data: {
           name: req.body.name,
-          img_url: req.body.img_url,
         },
       });
 
@@ -90,6 +88,28 @@ module.exports = {
         .status(201)
         .json({ data, message: "profile created successfully" });
     } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error });
+    }
+  },
+
+  createProfilePic: async (req, res) => {
+    try {
+      if (req.file) {
+        const data = await prisma.userProfile.update({
+          where: {
+            userId: Number(req.userData.id),
+          },
+          data: {
+            img_url: req.file.path,
+          },
+        });
+
+        return res.status(201).json({ message: "created" });
+      }
+      return res.status(404).json({ message: "file not defined" });
+    } catch (error) {
+      console.log(error);
       return res.status(500).json({ error });
     }
   },

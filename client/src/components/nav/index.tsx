@@ -34,6 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getUserProfile } from "src/api/user";
 import { ConstructionOutlined } from "@mui/icons-material";
+import { API_URL } from "src/api";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
@@ -81,25 +82,32 @@ const DraweContent = () => {
       </TabContext>
 
       <BottomUserActions>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar sx={{ width: "42px", height: "42px" }} />
-          <Typography
-            fontWeight={700}
-            color="text.secondary"
-            sx={{ textTransform: "uppercase" }}
-          >
-            {userProfileQuery.isSuccess && userProfileQuery.data?.data?.name}
-          </Typography>
-        </Stack>
-        <IconButton
-          onClick={handleClick}
-          id="user-menu-button"
-          aria-controls={open ? "fade-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          <ExpandMoreIcon />
-        </IconButton>
+        {userProfileQuery.isSuccess && (
+          <>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Avatar
+                sx={{ width: "42px", height: "42px" }}
+                src={`${API_URL}/${userProfileQuery.data?.data?.img_url}`}
+              />
+              <Typography
+                fontWeight={700}
+                color="text.secondary"
+                sx={{ textTransform: "uppercase" }}
+              >
+                {userProfileQuery.data?.data?.name}
+              </Typography>
+            </Stack>
+            <IconButton
+              onClick={handleClick}
+              id="user-menu-button"
+              aria-controls={open ? "fade-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </>
+        )}
       </BottomUserActions>
 
       <Menu
