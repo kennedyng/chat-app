@@ -10,7 +10,9 @@ router.post("/create", checkAuth, roomController.createRoom);
 
 router.post("/join/:roomId", checkAuth, roomController.joinRoom);
 
-router.get("/all", roomController.getAllRooms);
+router.get("/all", (req, res) => {
+  res.status(200).json({ message: "may be the database" });
+});
 
 router.get("/one/:roomId", checkAuth, getOneRoom);
 
