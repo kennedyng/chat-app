@@ -10,11 +10,11 @@ const userRouter = require("./routes/user");
 const roomRouter = require("./routes/room");
 const messageRouter = require("./routes/message");
 
-app.use(cors());
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/uploads/profile", express.static("uploads/profile"));
+app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/room", roomRouter);
