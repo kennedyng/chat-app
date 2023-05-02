@@ -47,11 +47,7 @@ const LoginPage = () => {
           authState: { id: data.id },
         })
       ) {
-        if (data.profileCompleted) {
-          navigate("/");
-        } else {
-          navigate("/auth/set/profile");
-        }
+        navigate("/");
       }
     },
   });

@@ -25,5 +25,3 @@ app.use("/message", messageRouter);
 app.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
-
-module.exports = app;
