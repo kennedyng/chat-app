@@ -1,6 +1,5 @@
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+
 const cors = require("cors");
 
 const bodyParser = require("body-parser");
@@ -26,3 +25,5 @@ app.use("/message", messageRouter);
 app.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
+
+module.exports = app;
