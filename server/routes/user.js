@@ -36,12 +36,17 @@ router.post("/register", userController.register);
 
 router.get("/profile", checkAuth, userController.getProfile);
 
-router.patch("/profile/edit", checkAuth, userController.editProfile);
-
 router.post(
-  "/profile/upload",
-  upload.single("file"),
+  "/profile/edit",
+  upload.single("profile_pic"),
   checkAuth,
-  userController.createProfilePic
+  userController.editProfile
 );
+
+// router.post(
+//   "/profile/upload",
+//   upload.single("file"),
+//   checkAuth,
+//   userController.createProfilePic
+// );
 module.exports = router;

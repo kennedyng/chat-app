@@ -17,13 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
 import { useDropzone } from "react-dropzone";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import {
-  createUserProfilePic,
-  editUserProfile,
-  getUserProfile,
-} from "src/api/user";
+import { editUserProfile, getUserProfile } from "src/api/user";
 import { NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
 import { PuffLoader } from "react-spinners";
@@ -34,14 +30,15 @@ const SetProfilePage = () => {
   const authHeader = useAuthHeader();
 
   const userProfileMutation = useMutation(editUserProfile);
-  const profilePicMutation = useMutation(createUserProfilePic);
 
-  // move to home only when name is set
+  const queryClient = useQueryClient();
+  // move to home only when profile is complete
   const userProfileQuery = useQuery({
     queryKey: ["userProfile"],
     queryFn: () => getUserProfile(authHeader()),
     onSuccess: ({ data }) => {
-      if (data.name) {
+      queryClient.invalidateQueries(["userProfile"]);
+      if (data?.completed) {
         navigate("/");
       }
     },
@@ -77,26 +74,16 @@ const SetProfilePage = () => {
     }),
 
     onSubmit: ({ name }) => {
-      userProfileMutation.mutate(
-        { name, token: authHeader() },
-        {
-          onError: () => {
-            toast.error("something went wrong try again");
-          },
-        }
-      );
-
-      // profilePicMutation.mutate(
-      //   {
-      //     profilePic: acceptedFiles[0],
-      //     token: authHeader(),
-      //   },
-      //   {
-      //     onError: () => {
-      //       toast.error("something went wrong try again");
-      //     },
-      //   }
-      // );
+      const data = {
+        name,
+        token: authHeader(),
+        profilePic: acceptedFiles[0],
+      };
+      userProfileMutation.mutate(data, {
+        onError: () => {
+          toast.error("something went wrong try again");
+        },
+      });
     },
   });
 
@@ -111,9 +98,7 @@ const SetProfilePage = () => {
         onSubmit={formik.handleSubmit}
         sx={{ p: { xs: 2, md: 8 }, flex: 1 }}
       >
-        <Collapse
-          in={userProfileMutation.isSuccess && profilePicMutation.isSuccess}
-        >
+        <Collapse in={userProfileMutation.isSuccess}>
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             {userProfileMutation.data?.message}

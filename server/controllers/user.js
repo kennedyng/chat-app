@@ -81,13 +81,12 @@ module.exports = {
 
   editProfile: async (req, res) => {
     try {
-      console.log(req.body);
-      const data = await prisma.userProfile.update({
-        where: {
-          userId: Number(req.userData.id),
-        },
+      const data = await prisma.userProfile.create({
         data: {
+          userId: Number(req.userData.id),
           name: req.body.name,
+          img_url: req.file.path ?? null,
+          completed: true,
         },
       });
 
