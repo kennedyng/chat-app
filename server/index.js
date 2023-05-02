@@ -24,19 +24,8 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: [
-      "http://127.0.0.1:5173",
-      "https://chat-app-lilac-xi.vercel.app",
-      "https://chat-app-kennedyngosachanda-gmailcom.vercel.app",
-    ],
-  },
-});
-
-server.listen(process.env.PORT || port, () => {
+app.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
 
-module.exports = server;
+module.exports = app;
