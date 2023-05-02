@@ -6,6 +6,7 @@ import {
   Collapse,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useState } from "react";
@@ -16,18 +17,35 @@ import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
 import { useDropzone } from "react-dropzone";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { toast } from "react-toastify";
-import { createUserProfilePic, editUserProfile } from "src/api/user";
+import {
+  createUserProfilePic,
+  editUserProfile,
+  getUserProfile,
+} from "src/api/user";
 import { NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
+import { PuffLoader } from "react-spinners";
 
 const SetProfilePage = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const authHeader = useAuthHeader();
 
   const userProfileMutation = useMutation(editUserProfile);
   const profilePicMutation = useMutation(createUserProfilePic);
+
+  // move to home only when name is set
+  const userProfileQuery = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: () => getUserProfile(authHeader()),
+    onSuccess: ({ data }) => {
+      if (data.name) {
+        navigate("/");
+      }
+    },
+  });
 
   const [profilePic, setProfilePic] = useState<any>(null);
 
@@ -81,6 +99,11 @@ const SetProfilePage = () => {
       // );
     },
   });
+
+  if (userProfileQuery.isLoading) {
+    return <PuffLoader color={theme.palette.primary.main} />;
+  }
+
   return (
     <Box>
       <Box

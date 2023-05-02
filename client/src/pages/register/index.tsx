@@ -22,6 +22,7 @@ import * as Yup from "yup";
 
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
 import { useAuthHeader } from "react-auth-kit";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const {
@@ -51,7 +52,7 @@ const RegisterPage = () => {
     onSubmit: (values) => {
       registerMutate(values, {
         onSuccess: () => {
-          navigate("/auth/set/profile");
+          toast.success("You are now Registered");
         },
       });
     },

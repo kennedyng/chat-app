@@ -24,12 +24,12 @@ model User {
 }
 
 model UserProfile {
-  id      Int     @id @default(autoincrement())
-  img_url String?
-  name    String
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  id        Int     @id @default(autoincrement())
+  img_url   String?
+  name      String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int     @unique
+  completed Boolean @default(false)
 }
 
 model UsersJoinedRoom {

@@ -30,6 +30,7 @@ import { EmailValidation, PasswordValidation } from "src/utils/validation";
 const LoginPage = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
+
   const {
     isLoading,
     mutate: loginMutate,
@@ -47,7 +48,7 @@ const LoginPage = () => {
           authState: { id: data.id },
         })
       ) {
-        navigate("/");
+        navigate("/auth/set/profile");
       }
     },
   });
