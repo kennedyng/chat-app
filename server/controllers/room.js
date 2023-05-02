@@ -1,3 +1,5 @@
+const prisma = require("../utils/prisma");
+
 module.exports = {
   createRoom: async (req, res) => {
     try {
