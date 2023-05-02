@@ -31,8 +31,8 @@ const io = new Server(server, {
   },
 });
 
-server.listen(process.env.PORT || port, () => {
+app.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
 
-module.exports = server;
+module.exports = app;
