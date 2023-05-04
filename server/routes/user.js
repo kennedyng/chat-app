@@ -37,16 +37,17 @@ router.post("/register", userController.register);
 router.get("/profile", checkAuth, userController.getProfile);
 
 router.post(
+  "/profile/create",
+  upload.single("profile_pic"),
+  checkAuth,
+  userController.createProfile
+);
+
+router.put(
   "/profile/edit",
   upload.single("profile_pic"),
   checkAuth,
   userController.editProfile
 );
 
-// router.post(
-//   "/profile/upload",
-//   upload.single("file"),
-//   checkAuth,
-//   userController.createProfilePic
-// );
 module.exports = router;

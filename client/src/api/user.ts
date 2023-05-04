@@ -33,6 +33,25 @@ interface ProfileBodyType {
   name: string;
   profilePic?: any;
 }
+
+export const createUserProfile = async (
+  body: ProfileBodyType
+): Promise<any> => {
+  const headers = {
+    Authorization: body.token,
+    "Content-Type": "multipart/form-data",
+  };
+
+  const formData = new FormData();
+  formData.append("profile_pic", body.profilePic);
+  formData.append("name", body.name);
+
+  const res = await axios.post(`${API_URL}/user/profile/create`, formData, {
+    headers,
+  });
+  return res.data;
+};
+
 export const editUserProfile = async (body: ProfileBodyType): Promise<any> => {
   const headers = {
     Authorization: body.token,
@@ -43,26 +62,8 @@ export const editUserProfile = async (body: ProfileBodyType): Promise<any> => {
   formData.append("profile_pic", body.profilePic);
   formData.append("name", body.name);
 
-  const res = await axios.post(`${API_URL}/user/profile/edit`, formData, {
+  const res = await axios.put(`${API_URL}/user/profile/edit`, formData, {
     headers,
   });
   return res.data;
 };
-
-// export const createUserProfilePic = async (data: {
-//   token: string;
-//   profilePic: any;
-// }): Promise<any> => {
-//   const headers = {
-//     "Content-Type": "multipart/form-data",
-//     Authorization: data.token,
-//   };
-
-//   const formData = new FormData();
-//   formData.append("file", data.profilePic);
-
-//   const res = await axios.post(`${API_URL}/user/profile/upload`, formData, {
-//     headers,
-//   });
-//   return res.data;
-// };

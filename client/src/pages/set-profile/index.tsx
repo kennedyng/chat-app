@@ -19,7 +19,11 @@ import { useAuthHeader } from "react-auth-kit";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { editUserProfile, getUserProfile } from "src/api/user";
+import {
+  createUserProfile,
+  editUserProfile,
+  getUserProfile,
+} from "src/api/user";
 import { NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
 import { PuffLoader } from "react-spinners";
@@ -29,7 +33,7 @@ const SetProfilePage = () => {
   const navigate = useNavigate();
   const authHeader = useAuthHeader();
 
-  const userProfileMutation = useMutation(editUserProfile);
+  const userProfileMutation = useMutation(createUserProfile);
 
   const queryClient = useQueryClient();
   // move to home only when profile is complete
