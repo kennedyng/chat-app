@@ -7,9 +7,7 @@ interface Props {
 }
 
 //connect to socket io
-export const socket = io(API_URL, {
-  transports: ["websocket"],
-});
+export const socket = io(API_URL);
 
 export type SocketContextType = {
   socket: Socket;
