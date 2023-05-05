@@ -24,7 +24,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { loginUser } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 
-import { useSignIn } from "react-auth-kit";
+import { useAuthUser, useSignIn } from "react-auth-kit";
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
 import useSocket from "src/hooks/useSocket";
 
@@ -32,6 +32,7 @@ const LoginPage = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
 
+  const auth = useAuthUser();
   const {
     isLoading,
     mutate: loginMutate,

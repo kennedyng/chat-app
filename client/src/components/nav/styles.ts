@@ -45,7 +45,7 @@ StyledMobileDrawer.defaultProps = {
   elevation: 0,
 };
 
-export const StyledBadge = styled(Badge)(({ theme }) => ({
+export const StyledBadge = styled(Badge)(({ theme, color }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
     color: "#44b700",

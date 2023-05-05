@@ -29,11 +29,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { useDrawer } from "../../context/drawer";
-import { useAuthHeader, useSignOut } from "react-auth-kit";
+import { useAuthHeader, useAuthUser, useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getUserProfile } from "src/api/user";
 import { API_URL } from "src/api";
+import useSocket from "src/hooks/useSocket";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
@@ -52,10 +53,10 @@ const DraweContent = () => {
   };
 
   const signOut = useSignOut();
-
+  const auth = useAuthUser();
   const handleSignOut = () => {
-    signOut();
     setAnchorEl(null);
+    signOut();
   };
 
   const handleProfileClick = () => {

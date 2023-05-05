@@ -1,25 +1,22 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Nav from "../../components/nav";
 
 import { Toolbar } from "@mui/material";
 
-import { useToggle } from "../../hooks/useToggle";
-import useSocket from "src/hooks/useSocket";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuthUser } from "react-auth-kit";
+import useSocket from "src/hooks/useSocket";
 
 const drawerWidth = "324px";
 
 const RootLayout = () => {
-  const socket = useSocket();
-  const [isDrawerOpen, toggleDrawer] = useToggle();
-  const theme = useTheme();
+  const { getOnline, activeUsers } = useSocket();
   const auth = useAuthUser();
 
   useEffect(() => {
-    socket.emit("USER_ONLINE", { userId: auth()?.id });
-  }, []);
+    getOnline(auth()?.id);
+  }, [activeUsers]);
 
   return (
     <>

@@ -11,7 +11,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://127.0.0.1:5173",
+    origin: [
+      "http://127.0.0.1:5173",
+      "https://chat-app-production-ba2b.up.railway.app",
+      "https://chat-app-baff.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH"],
   },
 });
 
@@ -29,16 +34,20 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-let activeUsers = new Set();
+const users = {};
 
 io.on("connection", (socket) => {
-  socket.on("USER_ONLINE", ({ userId }) => {
-    activeUsers.add(userId);
+  socket.on("USER_ONLINE", (userId) => {
+    users[socket.id] = userId;
 
-    console.log(Array.from(activeUsers));
+    console.log("send ===", users);
+
+    socket.emit("ACTIVE_USERS", users);
   });
 
-  io.emit("ACTIVE_USERS", { id: [...activeUsers] });
+  socket.on("disconnect", () => {
+    delete users[socket.id];
+  });
 });
 
 server.listen(process.env.PORT || port, () => {

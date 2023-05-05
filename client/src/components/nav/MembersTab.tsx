@@ -20,7 +20,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Loader, StyledBadge } from "./styles";
 import { useQuery } from "react-query";
 import { getChannelData } from "src/api/channels";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useParams } from "react-router-dom";
 import { API_URL } from "src/api";
 import useSocket from "src/hooks/useSocket";
@@ -28,9 +28,9 @@ import useSocket from "src/hooks/useSocket";
 const MembersTab = () => {
   const theme = useTheme();
 
-  const socket = useSocket();
+  const { activeUsers } = useSocket();
+
   const { setTabValue } = useDrawer();
-  const [activerUsersIds, setActiveUsersIds] = useState([]);
 
   const authHeader = useAuthHeader();
   const { channel } = useParams();
@@ -43,12 +43,6 @@ const MembersTab = () => {
     queryFn: () =>
       getChannelData({ roomId: Number(channel), token: String(authHeader()) }),
   });
-
-  useEffect(() => {
-    socket.on("ACTIVE_USERS", (users) => {
-      console.log("users", users);
-    });
-  }, [socket]);
 
   return (
     <>
@@ -88,9 +82,13 @@ const MembersTab = () => {
                   <ListItemButton disableRipple disableTouchRipple>
                     <ListItemAvatar>
                       <StyledBadge
-                        overlap="circular"
+                        overlap="rectangular"
                         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        variant="dot"
+                        variant={
+                          Object.values(activeUsers).includes(member.userId)
+                            ? "dot"
+                            : "standard"
+                        }
                       >
                         <Avatar
                           alt={member.User?.profile?.name}
