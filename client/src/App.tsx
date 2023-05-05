@@ -1,5 +1,7 @@
 import { RequireAuth } from "react-auth-kit";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { API_URL } from "./api";
+import SocketProvider from "./context/socket";
 import AuthLayout from "./layout/auth";
 import RootLayout from "./layout/root";
 import EditProfilePage from "./pages/edit-profile";
@@ -8,7 +10,6 @@ import LoginPage from "./pages/login";
 import ProfileView from "./pages/profile-view";
 import RegisterPage from "./pages/register";
 import SetProfilePage from "./pages/set-profile";
-
 function App() {
   return (
     <BrowserRouter>

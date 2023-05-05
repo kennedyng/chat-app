@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 import { AuthProvider } from "react-auth-kit";
+import SocketProvider from "./context/socket";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -27,7 +28,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <DrawerProvider>
-            <App />
+            <SocketProvider>
+              <App />
+            </SocketProvider>
           </DrawerProvider>
         </ThemeProvider>
       </QueryClientProvider>

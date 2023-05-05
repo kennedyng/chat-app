@@ -5,12 +5,21 @@ import Nav from "../../components/nav";
 import { Toolbar } from "@mui/material";
 
 import { useToggle } from "../../hooks/useToggle";
+import useSocket from "src/hooks/useSocket";
+import { useCallback, useEffect, useState } from "react";
+import { useAuthUser } from "react-auth-kit";
 
 const drawerWidth = "324px";
 
 const RootLayout = () => {
+  const socket = useSocket();
   const [isDrawerOpen, toggleDrawer] = useToggle();
   const theme = useTheme();
+  const auth = useAuthUser();
+
+  useEffect(() => {
+    socket.emit("USER_ONLINE", { userId: auth()?.id });
+  }, []);
 
   return (
     <>

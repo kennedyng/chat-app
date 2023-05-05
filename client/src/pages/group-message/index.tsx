@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   Divider,
-  Grid,
   InputAdornment,
   Stack,
   Typography,
@@ -11,15 +10,17 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 
+import moment from "moment";
 import { useAuthHeader } from "react-auth-kit";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { getChannelMessages } from "src/api/channels";
 import { addMessage } from "src/api/message";
 import { Loader } from "src/components/nav/styles";
-import { MessagesContent, MessageTextField, SendButton } from "./styles";
-import moment from "moment";
 import { messageDivider } from "src/utils";
+import { MessagesContent, MessageTextField, SendButton } from "./styles";
+
+import useSocket from "src/hooks/useSocket";
 
 interface MessageProps {
   id: string | number;

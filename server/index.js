@@ -2,9 +2,18 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 3000;
 
-//routes
+const http = require("http");
+
+const { Server } = require("socket.io");
+const port = 3000;
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://127.0.0.1:5173",
+  },
+});
 
 const userRouter = require("./routes/user");
 const roomRouter = require("./routes/room");
@@ -20,8 +29,20 @@ app.use("/user", userRouter);
 app.use("/room", roomRouter);
 app.use("/message", messageRouter);
 
-app.listen(process.env.PORT || port, () => {
+let activeUsers = new Set();
+
+io.on("connection", (socket) => {
+  socket.on("USER_ONLINE", ({ userId }) => {
+    activeUsers.add(userId);
+
+    console.log(Array.from(activeUsers));
+  });
+
+  io.emit("ACTIVE_USERS", { id: [...activeUsers] });
+});
+
+server.listen(process.env.PORT || port, () => {
   console.log("chat app runing on http://localhost:" + port);
 });
 
-module.exports = app;
+module.exports = server;

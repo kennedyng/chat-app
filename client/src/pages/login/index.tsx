@@ -26,6 +26,7 @@ import { LoadingButton } from "@mui/lab";
 
 import { useSignIn } from "react-auth-kit";
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
+import useSocket from "src/hooks/useSocket";
 
 const LoginPage = () => {
   const signIn = useSignIn();

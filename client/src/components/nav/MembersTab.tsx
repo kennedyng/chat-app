@@ -13,7 +13,7 @@ import {
   Avatar,
   useTheme,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useDrawer } from "../../context/drawer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -23,10 +23,14 @@ import { getChannelData } from "src/api/channels";
 import { useAuthHeader } from "react-auth-kit";
 import { useParams } from "react-router-dom";
 import { API_URL } from "src/api";
+import useSocket from "src/hooks/useSocket";
 
 const MembersTab = () => {
   const theme = useTheme();
+
+  const socket = useSocket();
   const { setTabValue } = useDrawer();
+  const [activerUsersIds, setActiveUsersIds] = useState([]);
 
   const authHeader = useAuthHeader();
   const { channel } = useParams();
@@ -39,6 +43,12 @@ const MembersTab = () => {
     queryFn: () =>
       getChannelData({ roomId: Number(channel), token: String(authHeader()) }),
   });
+
+  useEffect(() => {
+    socket.on("ACTIVE_USERS", (users) => {
+      console.log("users", users);
+    });
+  }, [socket]);
 
   return (
     <>
