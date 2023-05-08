@@ -37,12 +37,25 @@ app.use("/message", messageRouter);
 const users = {};
 
 io.on("connection", (socket) => {
+  console.log(socket.id);
   socket.on("USER_ONLINE", (userId) => {
     users[socket.id] = userId;
 
-    console.log("send ===", users);
+    io.emit("ACTIVE_USERS", users);
+  });
 
-    socket.emit("ACTIVE_USERS", users);
+  socket.on("USER_OFFLINE", (userId) => {
+    delete users[socket.id];
+
+    io.emit("ACTIVE_USERS", users);
+  });
+
+  socket.on("JOIN_CHANNEL", (channelId) => {
+    socket.join(channelId);
+  });
+
+  socket.on("SEND_GROUP_MESSAGE", (data) => {
+    io.in(data.roomId).emit("RECEIVE_GROUP_MESSAGE", data);
   });
 
   socket.on("disconnect", () => {

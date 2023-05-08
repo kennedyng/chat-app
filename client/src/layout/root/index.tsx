@@ -15,8 +15,9 @@ const RootLayout = () => {
   const auth = useAuthUser();
 
   useEffect(() => {
+    ///socket io getting online
     getOnline(auth()?.id);
-  }, [activeUsers]);
+  }, []);
 
   return (
     <>

@@ -52,11 +52,15 @@ const DraweContent = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  const { getOffline } = useSocket();
   const signOut = useSignOut();
   const auth = useAuthUser();
   const handleSignOut = () => {
     setAnchorEl(null);
     signOut();
+
+    // socket io offline
+    getOffline(auth()?.id);
   };
 
   const handleProfileClick = () => {

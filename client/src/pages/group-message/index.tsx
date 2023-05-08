@@ -11,16 +11,17 @@ import {
 import { useFormik } from "formik";
 
 import moment from "moment";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { getChannelMessages } from "src/api/channels";
+import { getChannelMessages, joinChannel } from "src/api/channels";
 import { addMessage } from "src/api/message";
 import { Loader } from "src/components/nav/styles";
 import { messageDivider } from "src/utils";
 import { MessagesContent, MessageTextField, SendButton } from "./styles";
 
 import useSocket from "src/hooks/useSocket";
+import { useEffect, useState } from "react";
 
 interface MessageProps {
   id: string | number;
@@ -64,7 +65,19 @@ const MessageRender: React.FC<MessageProps> = ({
 const GroupMessagePage = () => {
   const theme = useTheme();
   const authHeader = useAuthHeader();
+  const auth = useAuthUser();
   const { channel } = useParams();
+
+  const {
+    message: receivedMessage,
+    sendMessage,
+    joinChannel: joinRoom,
+  } = useSocket();
+
+  useEffect(() => {
+    joinRoom(Number(channel ?? 1));
+  }, [channel]);
+
   const { mutate: messageMutate } = useMutation(addMessage);
 
   const {
@@ -82,23 +95,26 @@ const GroupMessagePage = () => {
     },
 
     onSubmit: ({ message }, { resetForm }) => {
-      resetForm();
-
       const body = {
         token: authHeader(),
         roomId: Number(channel ?? 1),
+        userId: String(auth()?.id),
         message,
       };
 
-      messageMutate(body, {
-        onSuccess(data) {
-          console.log("message saved", data);
-        },
+      // messageMutate(body, {
+      //   onSuccess(data) {
+      //     console.log("message saved", data);
+      //   },
 
-        onError(data) {
-          console.log("eeror", data);
-        },
-      });
+      //   onError(data) {
+      //     console.log("eeror", data);
+      //   },
+      // });
+
+      sendMessage(body);
+
+      resetForm();
     },
   });
 
@@ -125,11 +141,7 @@ const GroupMessagePage = () => {
         <MessagesContent>
           {channelMessages.data?.map((message: any) => (
             <Box key={message.id}>
-              <Divider
-                sx={{
-                  display: messageDivider(message.createdAt) ? "flex" : "none",
-                }}
-              >
+              <Divider>
                 <Typography>
                   {moment(message.createdAt).format("MMM Do YY")}
                 </Typography>

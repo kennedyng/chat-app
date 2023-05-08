@@ -28,7 +28,7 @@ import useSocket from "src/hooks/useSocket";
 const MembersTab = () => {
   const theme = useTheme();
 
-  const { activeUsers } = useSocket();
+  const { activeUsers, socket } = useSocket();
 
   const { setTabValue } = useDrawer();
 

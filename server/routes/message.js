@@ -1,6 +1,5 @@
 const checkAuth = require("../middlewares/checkAuth");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../utils/prisma");
 
 const router = require("express").Router();
 

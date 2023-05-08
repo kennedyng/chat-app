@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createChannel, fetchAllChannels, joinChannel } from "src/api/channels";
 import { useDrawer } from "src/context/drawer";
+import useSocket from "src/hooks/useSocket";
 import { useToggle } from "src/hooks/useToggle";
 import { DescriptionValidation, NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
@@ -44,6 +45,9 @@ const ChannelsTab = () => {
   const auth = useAuthUser();
 
   const { setTabValue } = useDrawer();
+
+  const { joinChannel: joinRoom } = useSocket();
+
   const { data, isLoading, isSuccess } = useQuery({
     queryKey: ["channels"],
     queryFn: () => fetchAllChannels(),
@@ -65,7 +69,7 @@ const ChannelsTab = () => {
   const handleListItemClick = (channelId: number) => {
     setSelectedListItem(Number(channelId));
     const body = {
-      roomId: channelId,
+      roomId: Number(channelId),
       token: authHeader(),
     };
 
