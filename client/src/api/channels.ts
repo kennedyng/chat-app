@@ -56,6 +56,7 @@ export const getChannelData = async (data: ChannelDataType) => {
   const res = await axios.get(`${API_URL}/room/one/${data.roomId}`, {
     headers,
   });
+
   return res.data;
 };
 

@@ -21,6 +21,7 @@ export type SocketContextType = {
   getOnline: (userId: number) => void;
   getOffline: (userId: number) => void;
   joinChannel: (channelId: number) => void;
+  leaveChannel: (channelId: number) => void;
   sendMessage: (data: any) => void;
 };
 
@@ -39,6 +40,10 @@ const initialState = {
 
   joinChannel: (channelId: number) => {
     socket.emit("JOIN_CHANNEL", channelId);
+  },
+
+  leaveChannel: (channelId: number) => {
+    socket.emit("LEAVE_CHANNEL", channelId);
   },
 
   sendMessage: (data: any) => {

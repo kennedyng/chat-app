@@ -9,20 +9,19 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import LockIcon from "@mui/icons-material/Lock";
 import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
 import { LoadingButton } from "@mui/lab";
-import { useMutation, useQuery } from "react-query";
-import { bodyType, getUserProfile, registerUser } from "src/api/user";
+import { useMutation } from "react-query";
+import { registerUser } from "src/api/user";
 import * as Yup from "yup";
 
-import { EmailValidation, PasswordValidation } from "src/utils/validation";
-import { useAuthHeader } from "react-auth-kit";
 import { toast } from "react-toastify";
+import { EmailValidation, PasswordValidation } from "src/utils/validation";
 
 const RegisterPage = () => {
   const {

@@ -54,6 +54,10 @@ io.on("connection", (socket) => {
     socket.join(channelId);
   });
 
+  socket.on("LEAVE_CHANNEL", (channelId) => {
+    socket.leave(channelId);
+  });
+
   socket.on("SEND_GROUP_MESSAGE", (data) => {
     io.in(data.roomId).emit("RECEIVE_GROUP_MESSAGE", data);
   });

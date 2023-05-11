@@ -2,7 +2,6 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Avatar,
   Box,
-  Divider,
   InputAdornment,
   Stack,
   Typography,
@@ -11,27 +10,29 @@ import {
 import { useFormik } from "formik";
 
 import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { getChannelMessages, joinChannel } from "src/api/channels";
+import { getChannelMessages } from "src/api/channels";
 import { addMessage } from "src/api/message";
+import { getUserProfile } from "src/api/user";
 import { Loader } from "src/components/nav/styles";
-import { messageDivider } from "src/utils";
-import { MessagesContent, MessageTextField, SendButton } from "./styles";
-
 import useSocket from "src/hooks/useSocket";
-import { useEffect, useState } from "react";
+import { MessageTextField, MessagesContent, SendButton } from "./styles";
 
 interface MessageProps {
-  id: string | number;
-  author: string;
+  User: {
+    profile: {
+      name?: string;
+      img_url?: string;
+    };
+  };
   createdAt: string;
   message: string;
 }
 const MessageRender: React.FC<MessageProps> = ({
-  id,
-  author,
+  User,
   createdAt,
   message,
 }) => {
@@ -42,7 +43,7 @@ const MessageRender: React.FC<MessageProps> = ({
       spacing={2}
       alignItems={{ xs: "baseline", md: "center" }}
     >
-      <Avatar alt="s"></Avatar>
+      <Avatar src={User.profile.img_url}></Avatar>
       <Stack spacing={2}>
         <Stack
           sx={{ color: "text.secondary" }}
@@ -50,7 +51,7 @@ const MessageRender: React.FC<MessageProps> = ({
           alignItems="baseline"
           spacing={2}
         >
-          <Typography fontWeight={700}>{author} </Typography>
+          <Typography fontWeight={700}>{User.profile?.name} </Typography>
           <Typography fontWeight={700} fontSize={14}>
             {moment(createdAt).calendar()}
           </Typography>
@@ -67,27 +68,52 @@ const GroupMessagePage = () => {
   const authHeader = useAuthHeader();
   const auth = useAuthUser();
   const { channel } = useParams();
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const [channelReceivedMessages, setChannelReceivedMessages] = useState<any>(
+    []
+  );
+
+  const userProfileQuery = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: () => getUserProfile(authHeader()),
+  });
 
   const {
+    socket,
     message: receivedMessage,
     sendMessage,
     joinChannel: joinRoom,
+    leaveChannel,
   } = useSocket();
 
   useEffect(() => {
     joinRoom(Number(channel ?? 1));
+
+    return () => {
+      leaveChannel(Number(channel ?? 1));
+      setChannelReceivedMessages([]);
+    };
   }, [channel]);
 
   const { mutate: messageMutate } = useMutation(addMessage);
 
-  const {
-    isSuccess: isChannelMsgSuccess,
-    data: channelMessages,
-    isLoading: isGetingChannelMsgs,
-  } = useQuery({
+  const channelMessagesQuery = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
     queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
   });
+
+  useEffect(() => {
+    if (Object.values(receivedMessage).length) {
+      setChannelReceivedMessages((prevData: any) => [
+        ...prevData,
+        receivedMessage,
+      ]);
+    }
+  }, [receivedMessage]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [channelReceivedMessages]);
 
   const formik = useFormik({
     initialValues: {
@@ -95,24 +121,27 @@ const GroupMessagePage = () => {
     },
 
     onSubmit: ({ message }, { resetForm }) => {
-      const body = {
-        token: authHeader(),
-        roomId: Number(channel ?? 1),
-        userId: String(auth()?.id),
-        message,
-      };
+      // const body = {
+      //   token: authHeader(),
+      //   roomId: Number(channel ?? 1),
+      //   userId: auth()?.id,
+      //   message,
+      // };
 
       // messageMutate(body, {
-      //   onSuccess(data) {
-      //     console.log("message saved", data);
-      //   },
-
       //   onError(data) {
       //     console.log("eeror", data);
       //   },
       // });
 
-      sendMessage(body);
+      sendMessage({
+        message,
+        roomId: Number(channel ?? 1),
+        createdAt: new Date(),
+        User: {
+          profile: userProfileQuery.data?.data,
+        },
+      });
 
       resetForm();
     },
@@ -125,7 +154,7 @@ const GroupMessagePage = () => {
         pt: 2,
       }}
     >
-      {isGetingChannelMsgs && (
+      {channelMessagesQuery.isLoading && (
         <Box
           sx={{
             height: 1,
@@ -137,20 +166,24 @@ const GroupMessagePage = () => {
           <Loader color={theme.palette.primary.main} />
         </Box>
       )}
-      {isChannelMsgSuccess && (
-        <MessagesContent>
-          {channelMessages.data?.map((message: any) => (
-            <Box key={message.id}>
-              <Divider>
+
+      <MessagesContent>
+        {[
+          ...(channelMessagesQuery.data?.data ?? []),
+          ...channelReceivedMessages,
+        ].map((message: any, index: number) => (
+          <Box key={index}>
+            {/* <Divider>
                 <Typography>
                   {moment(message.createdAt).format("MMM Do YY")}
                 </Typography>
-              </Divider>
-              <MessageRender key={message.id} {...message} />
-            </Box>
-          ))}
-        </MessagesContent>
-      )}
+              </Divider> */}
+            <MessageRender key={message.createAt} {...message} />
+          </Box>
+        ))}
+
+        <div ref={messageEndRef} />
+      </MessagesContent>
 
       <form onSubmit={formik.handleSubmit}>
         <MessageTextField
