@@ -37,7 +37,6 @@ app.use("/message", messageRouter);
 const users = {};
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
   socket.on("USER_ONLINE", (userId) => {
     users[socket.id] = userId;
 

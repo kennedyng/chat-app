@@ -73,7 +73,6 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     socket.on("RECEIVE_GROUP_MESSAGE", (data) => {
-      console.log("received Message", data);
       setMessage(data);
     });
   }, [socket, message]);

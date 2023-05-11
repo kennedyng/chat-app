@@ -20,6 +20,8 @@ import { getUserProfile } from "src/api/user";
 import { Loader } from "src/components/nav/styles";
 import useSocket from "src/hooks/useSocket";
 import { MessageTextField, MessagesContent, SendButton } from "./styles";
+import groupByCreatedTime from "src/utils/groupByCreatedTime";
+import * as Yup from "yup";
 
 interface MessageProps {
   User: {
@@ -69,6 +71,8 @@ const GroupMessagePage = () => {
   const auth = useAuthUser();
   const { channel } = useParams();
   const messageEndRef = useRef<HTMLDivElement>(null);
+
+  const [msgs, setMsgs] = useState([]);
   const [channelReceivedMessages, setChannelReceivedMessages] = useState<any>(
     []
   );
@@ -100,6 +104,9 @@ const GroupMessagePage = () => {
   const channelMessagesQuery = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
     queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
+    onSuccess: ({ data }) => {
+      groupByCreatedTime(data);
+    },
   });
 
   useEffect(() => {
@@ -120,19 +127,22 @@ const GroupMessagePage = () => {
       message: "",
     },
 
+    validationSchema: Yup.object({
+      message: Yup.string().required(),
+    }),
     onSubmit: ({ message }, { resetForm }) => {
-      // const body = {
-      //   token: authHeader(),
-      //   roomId: Number(channel ?? 1),
-      //   userId: auth()?.id,
-      //   message,
-      // };
+      const body = {
+        token: authHeader(),
+        roomId: Number(channel ?? 1),
+        userId: auth()?.id,
+        message,
+      };
 
-      // messageMutate(body, {
-      //   onError(data) {
-      //     console.log("eeror", data);
-      //   },
-      // });
+      messageMutate(body, {
+        onError(data) {
+          console.log("eeror", data);
+        },
+      });
 
       sendMessage({
         message,
@@ -171,14 +181,9 @@ const GroupMessagePage = () => {
         {[
           ...(channelMessagesQuery.data?.data ?? []),
           ...channelReceivedMessages,
-        ].map((message: any, index: number) => (
+        ].map((message: any, index) => (
           <Box key={index}>
-            {/* <Divider>
-                <Typography>
-                  {moment(message.createdAt).format("MMM Do YY")}
-                </Typography>
-              </Divider> */}
-            <MessageRender key={message.createAt} {...message} />
+            <MessageRender {...message} />
           </Box>
         ))}
 
