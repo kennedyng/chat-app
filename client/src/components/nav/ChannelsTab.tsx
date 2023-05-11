@@ -108,8 +108,6 @@ const ChannelsTab = () => {
           resetForm();
           toggleChannelForm();
           //scolling channel list to bottom
-
-          channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
         },
       });
     },
