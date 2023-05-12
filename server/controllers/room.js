@@ -57,14 +57,7 @@ module.exports = {
   },
 
   getAllRooms: async (req, res) => {
-    try {
-      const roomsData = await prisma.room.findMany();
-
-      res.status(200).json(roomsData);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
-    }
+    res.status(200).json(res.paginatedData);
   },
 
   getOneRoom: async (req, res) => {

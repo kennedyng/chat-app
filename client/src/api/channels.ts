@@ -1,8 +1,22 @@
 import axios from "axios";
 import { API_URL } from ".";
 
-export const fetchAllChannels = async () => {
-  const res = await axios.get(`${API_URL}/room/all/`);
+export const fetchAllChannels = async ({
+  query,
+  limit,
+  cursor,
+}: {
+  query?: string;
+  limit?: number;
+  cursor: number;
+}) => {
+  console.log("page para in cursor", query);
+  const res = await axios.get(
+    `${API_URL}/room/all/?q=${query}&limit=${limit}&cursor=${
+      cursor ? cursor : ""
+    }`
+  );
+
   return res.data;
 };
 

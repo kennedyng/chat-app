@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   Avatar,
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,9 +22,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createChannel, fetchAllChannels, joinChannel } from "src/api/channels";
@@ -33,12 +34,15 @@ import { useToggle } from "src/hooks/useToggle";
 import { DescriptionValidation, NameValidation } from "src/utils/validation";
 import * as Yup from "yup";
 
+import { useInView } from "react-intersection-observer";
+import { useDebounce } from "use-debounce";
 import {
   AddChannelButton,
   ListContent,
   Loader,
   SearchTextField,
 } from "./styles";
+import { PropagateLoader } from "react-spinners";
 
 const ChannelsTab = () => {
   const authHeader = useAuthHeader();
@@ -46,12 +50,8 @@ const ChannelsTab = () => {
 
   const { setTabValue } = useDrawer();
 
-  const { joinChannel: joinRoom } = useSocket();
+  const { ref, inView } = useInView();
 
-  const { data, isLoading, isSuccess } = useQuery({
-    queryKey: ["channels"],
-    queryFn: () => fetchAllChannels(),
-  });
   const { mutate: mutateChannel, isLoading: isCreatingChannel } =
     useMutation(createChannel);
 
@@ -65,6 +65,32 @@ const ChannelsTab = () => {
 
   const navigate = useNavigate();
   const [selectedListItem, setSelectedListItem] = useState<number>(0);
+
+  const [queryValue, setQueryValue] = useState("");
+
+  const [queryDebouncedValue] = useDebounce(queryValue, 500);
+
+  const channelsQuery = useInfiniteQuery({
+    queryKey: ["channels", queryDebouncedValue],
+
+    queryFn: ({ pageParam = 0 }) =>
+      fetchAllChannels({
+        query: queryDebouncedValue,
+        cursor: pageParam,
+        limit: 10,
+      }),
+    getNextPageParam: (data) => data.nextCursor ?? undefined,
+  });
+
+  React.useEffect(() => {
+    if (inView) {
+      channelsQuery.fetchNextPage();
+    }
+  }, [inView]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryValue(event.target.value);
+  };
 
   const handleListItemClick = (channelId: number) => {
     setSelectedListItem(Number(channelId));
@@ -91,7 +117,7 @@ const ChannelsTab = () => {
     toggleChannelForm();
   };
 
-  const formik = useFormik({
+  const createChannelFormik = useFormik({
     initialValues: {
       name: "",
       description: "",
@@ -108,6 +134,8 @@ const ChannelsTab = () => {
           resetForm();
           toggleChannelForm();
           //scolling channel list to bottom
+
+          channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
         },
       });
     },
@@ -140,30 +168,31 @@ const ChannelsTab = () => {
           <Typography fontWeight={700}>NEW CHANNEL</Typography>
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={createChannelFormik.handleSubmit}>
             <TextField
-              {...formik.getFieldProps("name")}
+              {...createChannelFormik.getFieldProps("name")}
               placeholder="Channel name"
               margin="normal"
               fullWidth
               error={
-                Boolean(formik.touched.name) && Boolean(formik.errors.name)
+                Boolean(createChannelFormik.touched.name) &&
+                Boolean(createChannelFormik.errors.name)
               }
-              helperText={formik.errors.name}
+              helperText={createChannelFormik.errors.name}
             />
             <TextField
               id="description"
               error={
-                Boolean(formik.touched.description) &&
-                Boolean(formik.errors.description)
+                Boolean(createChannelFormik.touched.description) &&
+                Boolean(createChannelFormik.errors.description)
               }
-              {...formik.getFieldProps("description")}
+              {...createChannelFormik.getFieldProps("description")}
               placeholder="Channel Description"
               margin="normal"
               multiline
               minRows={4}
               fullWidth
-              helperText={formik.errors.description}
+              helperText={createChannelFormik.errors.description}
             />
 
             <DialogActions>
@@ -178,51 +207,71 @@ const ChannelsTab = () => {
           </form>
         </DialogContent>
       </Dialog>
-      {isLoading && <Loader color={theme.palette.primary.main} />}
-      {isSuccess && (
-        <ListContent>
-          <Box sx={{ px: 2, py: 1.5 }}>
-            <SearchTextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              type="search"
-              placeholder="Search"
-              fullWidth
-              margin="dense"
-              variant="outlined"
-            />
-          </Box>
 
-          <List>
-            {data.map(({ name, id }: any) => (
-              <ListItem dense key={id} disableGutters>
-                <ListItemButton
-                  disableRipple
-                  disableTouchRipple
-                  onClick={() => handleListItemClick(id)}
-                >
-                  <ListItemAvatar>
-                    <Avatar sx={{ textTransform: "uppercase" }}>
-                      {name?.charAt(0)}
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={name} />
-                  {selectedListItem === Number(id) && isJoiningChannel && (
-                    <Typography variant="caption">Joining...</Typography>
-                  )}
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+      <ListContent>
+        <Box component="form" sx={{ px: 2, py: 1.5 }}>
+          <SearchTextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            value={queryValue}
+            onChange={handleInputChange}
+            type="search"
+            placeholder="Search"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+          />
+        </Box>
 
-          <div ref={channelsEndRef} />
-        </ListContent>
-      )}
+        {channelsQuery.isLoading && (
+          <Loader color={theme.palette.primary.main} />
+        )}
+
+        <List>
+          {channelsQuery.data?.pages.map((page: any, index) => (
+            <React.Fragment key={"page-" + index}>
+              {page.data.map((channel: any) => (
+                <ListItem dense key={channel.id} disableGutters>
+                  <ListItemButton
+                    disableRipple
+                    disableTouchRipple
+                    onClick={() => handleListItemClick(channel.id)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar sx={{ textTransform: "uppercase" }}>
+                        {/* {name?.charAt(0)} */}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={channel.name} />
+                    {selectedListItem === Number(channel.id) &&
+                      isJoiningChannel && (
+                        <Typography variant="caption">Joining...</Typography>
+                      )}
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </React.Fragment>
+          ))}
+
+          {true && (
+            <Stack direction="row" justifyContent="center">
+              <PropagateLoader
+                color={theme.palette.primary.main}
+                loading={channelsQuery.isFetchingNextPage}
+                size={6}
+                speedMultiplier={1}
+              />
+            </Stack>
+          )}
+        </List>
+
+        <div ref={ref}></div>
+      </ListContent>
     </>
   );
 };

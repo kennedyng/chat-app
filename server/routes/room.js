@@ -3,6 +3,7 @@ const router = require("express").Router();
 const checkAuth = require("../middlewares/checkAuth");
 const roomController = require("../controllers/room");
 const { getOneRoom } = require("../controllers/room");
+const cursorPagination = require("../middlewares/cursorPagination");
 
 //new instance
 
@@ -10,7 +11,21 @@ router.post("/create", checkAuth, roomController.createRoom);
 
 router.post("/join/:roomId", checkAuth, roomController.joinRoom);
 
-router.get("/all", roomController.getAllRooms);
+router.get(
+  "/all",
+  cursorPagination("room", (req) => {
+    const options = {
+      where: {
+        name: {
+          contains: req.query.q,
+        },
+      },
+    };
+
+    return options;
+  }),
+  roomController.getAllRooms
+);
 
 router.get("/one/:roomId", checkAuth, getOneRoom);
 
