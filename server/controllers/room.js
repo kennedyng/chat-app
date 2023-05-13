@@ -98,6 +98,20 @@ module.exports = {
     }
   },
 
+  getRoomInformation: async (req, res) => {
+    try {
+      const data = await prisma.room.findUnique({
+        where: {
+          id: Number(req.params.roomId),
+        },
+      });
+
+      res.status(200).json({ data });
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  },
+
   getRoomMessages: async (req, res) => {
     try {
       const data = await prisma.message.findMany({

@@ -18,6 +18,7 @@ import {
   Stack,
   TextField,
   Toolbar,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -153,9 +154,11 @@ const ChannelsTab = () => {
           <Typography variant="body1" fontWeight={700}>
             Channels
           </Typography>
-          <AddChannelButton onClick={handleAddNewChannelClick}>
-            <AddIcon />
-          </AddChannelButton>
+          <Tooltip arrow title="Create new Channel">
+            <AddChannelButton onClick={handleAddNewChannelClick}>
+              <AddIcon />
+            </AddChannelButton>
+          </Tooltip>
         </Stack>
       </Toolbar>
 
@@ -244,7 +247,7 @@ const ChannelsTab = () => {
                   >
                     <ListItemAvatar>
                       <Avatar sx={{ textTransform: "uppercase" }}>
-                        {/* {name?.charAt(0)} */}
+                        {channel.name?.charAt(0)}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText primary={channel.name} />
@@ -258,16 +261,13 @@ const ChannelsTab = () => {
             </React.Fragment>
           ))}
 
-          {true && (
-            <Stack direction="row" justifyContent="center">
-              <PropagateLoader
-                color={theme.palette.primary.main}
-                loading={channelsQuery.isFetchingNextPage}
-                size={6}
-                speedMultiplier={1}
-              />
-            </Stack>
-          )}
+          <Stack direction="row" justifyContent="center">
+            <Loader
+              size={30}
+              color={theme.palette.primary.main}
+              loading={channelsQuery.isFetchingNextPage}
+            />
+          </Stack>
         </List>
 
         <div ref={ref}></div>
