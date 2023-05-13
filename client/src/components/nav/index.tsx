@@ -75,7 +75,7 @@ const DraweContent = () => {
   return (
     <>
       <CloseDrawerButton onClick={toggleDrawer}>
-        <CloseIcon />
+        <CloseIcon fontSize="small" />
       </CloseDrawerButton>
       <TabContext value={tabValue}>
         <TabPanel value="1" sx={{ p: 0 }}>
