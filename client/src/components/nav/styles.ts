@@ -77,10 +77,10 @@ export const StyledBadge = styled(Badge)(({ theme, color }) => ({
 export const CloseDrawerButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
   background: "#120F13",
-  width: "38px",
+  width: "34px",
   height: "38px",
-  top: "5px",
-  left: "calc(324px + 6px)",
+  top: "2px",
+  left: "calc(324px + 4px)",
   display: "none",
   [theme.breakpoints.down("md")]: {
     display: "block",
