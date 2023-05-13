@@ -158,7 +158,7 @@ const Nav = () => {
       <AppBar color="transparent" position="fixed">
         <Toolbar>
           <Stack
-            sx={{ ml: { xs: 0, md: "324px" }, px: "40px" }}
+            sx={{ ml: { xs: 0, md: "324px" }, px: { xs: 0, md: "40px" } }}
             direction="row"
             alignItems="center"
             spacing={2}
