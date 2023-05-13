@@ -30,11 +30,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDrawer } from "../../context/drawer";
 import { useAuthHeader, useAuthUser, useSignOut } from "react-auth-kit";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getUserProfile } from "src/api/user";
 import { API_URL } from "src/api";
 import useSocket from "src/hooks/useSocket";
+import { getChannelData, getChannelInfo } from "src/api/channels";
 
 const DraweContent = () => {
   const { tabValue, toggleDrawer } = useDrawer();
@@ -145,27 +146,37 @@ const DraweContent = () => {
 
 const Nav = () => {
   const { open, toggleDrawer } = useDrawer();
+  const { channel } = useParams();
+
+  const channelInfoQuery = useQuery({
+    queryKey: ["channelInfo", Number(channel ?? 1)],
+    queryFn: () => getChannelInfo(Number(channel ?? 1)),
+  });
 
   return (
     <>
       <AppBar color="transparent" position="fixed">
         <Toolbar>
-          <Grid container>
-            <Grid container item xs={12} md={9} sx={{ px: { xs: 0, md: 4 } }}>
-              <Stack direction="row" alignItems="center" spacing={2}>
-                {!open && (
-                  <IconButton
-                    onClick={toggleDrawer}
-                    sx={{
-                      display: { xs: "span", md: "none" },
-                    }}
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                )}
-              </Stack>
-            </Grid>
-          </Grid>
+          <Stack
+            sx={{ ml: { xs: 0, md: "324px" }, px: "40px" }}
+            direction="row"
+            alignItems="center"
+            spacing={2}
+          >
+            {!open && (
+              <IconButton
+                onClick={toggleDrawer}
+                sx={{
+                  display: { xs: "span", md: "none" },
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Typography textTransform="uppercase" fontWeight={700}>
+              {channelInfoQuery.data?.data?.name}
+            </Typography>
+          </Stack>
         </Toolbar>
       </AppBar>
 

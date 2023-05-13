@@ -28,6 +28,7 @@ router.get(
 );
 
 router.get("/one/:roomId", checkAuth, getOneRoom);
+router.get("/info/:roomId", roomController.getRoomInformation);
 
 router.get("/messages/:roomId", roomController.getRoomMessages);
 module.exports = router;

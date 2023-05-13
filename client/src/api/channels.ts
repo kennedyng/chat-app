@@ -74,6 +74,12 @@ export const getChannelData = async (data: ChannelDataType) => {
   return res.data;
 };
 
+export const getChannelInfo = async (roomId: string | number) => {
+  const res = await axios.get(`${API_URL}/room/info/${roomId ?? 1}`);
+
+  return res.data;
+};
+
 export const getChannelMessages = async ({
   roomId,
 }: {
