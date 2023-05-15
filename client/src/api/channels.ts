@@ -86,5 +86,7 @@ export const getChannelMessages = async ({
   roomId: number;
 }): Promise<any> => {
   const res = await axios.get(`${API_URL}/room/messages/${roomId}`);
+
+  console.log(res.data);
   return res.data;
 };

@@ -2,6 +2,7 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Avatar,
   Box,
+  Divider,
   InputAdornment,
   Stack,
   Typography,
@@ -10,7 +11,7 @@ import {
 import { useFormik } from "formik";
 
 import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -72,7 +73,6 @@ const GroupMessagePage = () => {
   const { channel } = useParams();
   const messageEndRef = useRef<HTMLDivElement>(null);
 
-  const [msgs, setMsgs] = useState([]);
   const [channelReceivedMessages, setChannelReceivedMessages] = useState<any>(
     []
   );
@@ -104,8 +104,8 @@ const GroupMessagePage = () => {
   const channelMessagesQuery = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
     queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
-    onSuccess: ({ data }) => {
-      groupByCreatedTime(data);
+    onSuccess: (data) => {
+      // setChannelReceivedMessages(data);
     },
   });
 
@@ -178,13 +178,28 @@ const GroupMessagePage = () => {
       )}
 
       <MessagesContent>
-        {[
-          ...(channelMessagesQuery.data?.data ?? []),
-          ...channelReceivedMessages,
-        ].map((message: any, index) => (
-          <Box key={index}>
-            <MessageRender {...message} />
-          </Box>
+        {channelMessagesQuery.data?.map((item: any) => (
+          <React.Fragment key={item.createdTime}>
+            <Divider>
+              <Typography>{item.createdTime}</Typography>
+            </Divider>
+            {item.messages.map((msg: any) => (
+              <MessageRender key={msg.id} {...msg} />
+            ))}
+          </React.Fragment>
+        ))}
+
+        <Divider
+          sx={{
+            display: channelReceivedMessages.length ? "flex" : "none",
+          }}
+        >
+          now
+        </Divider>
+        {channelReceivedMessages.map((msg: any) => (
+          <React.Fragment key={msg.createdTime}>
+            <MessageRender {...msg} />
+          </React.Fragment>
         ))}
 
         <div ref={messageEndRef} />

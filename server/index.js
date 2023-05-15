@@ -23,6 +23,7 @@ const io = new Server(server, {
 const userRouter = require("./routes/user");
 const roomRouter = require("./routes/room");
 const messageRouter = require("./routes/message");
+const { categoriesByDate } = require("./utils/categoriesByDate");
 
 app.use(express.json());
 

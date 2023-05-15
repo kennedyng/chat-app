@@ -18,17 +18,22 @@ interface DataType {
 }
 
 const groupByCreatedTime = (data: DataType[]) => {
-  const chats = new Map();
-  data.map((chat: DataType) => {
-    const createdTime = moment(chat.createdAt).format("MMM Do YYYY");
-    if (chats.has(createdTime)) {
-      chats.set(createdTime, [...chats.get(createdTime), chat]);
-    } else {
-      chats.set(createdTime, [chat]);
-    }
+  const createdDays = new Set();
+
+  data.map((message) =>
+    createdDays.add(moment(message.createdAt).format("MMM Do YYYY"))
+  );
+
+  const groupedData = Array.from(createdDays).map((createdTime) => {
+    return {
+      createdTime: createdTime,
+      messages: data.filter(
+        (msg) => moment(msg.createdAt).format("MMM Do YYYY") === createdTime
+      ),
+    };
   });
 
-  return Array.from(chats);
+  return groupedData;
 };
 
 export default groupByCreatedTime;

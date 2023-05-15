@@ -1,3 +1,4 @@
+const { categoriesByDate } = require("../utils/categoriesByDate");
 const prisma = require("../utils/prisma");
 
 module.exports = {
@@ -127,7 +128,9 @@ module.exports = {
         },
       });
 
-      res.status(200).json({ data });
+      const groupedData = categoriesByDate(data);
+
+      res.status(200).json(groupedData);
     } catch (error) {
       res.status(500).json({ error });
     }

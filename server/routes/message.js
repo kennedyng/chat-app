@@ -1,11 +1,11 @@
 const checkAuth = require("../middlewares/checkAuth");
+const { categoriesByDate } = require("../utils/categoriesByDate");
 const prisma = require("../utils/prisma");
-
+const moment = require("moment");
 const router = require("express").Router();
 
 router.post("/create", checkAuth, async (req, res) => {
   try {
-    console.log("creating a message", req.body);
     const data = await prisma.message.create({
       data: {
         roomId: Number(req.body.roomId),
@@ -36,8 +36,12 @@ router.get("/messages/:roomId", async (req, res) => {
       },
     });
 
-    res.status(200).json({ data });
+    const groupedData = categoriesByDate(data);
+
+    console.log(groupedData);
+    res.status(200).json(groupedData);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error });
   }
 });
