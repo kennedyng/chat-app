@@ -1,9 +1,6 @@
 # Real Time Group chat 
-[![Now in Android: 55]          // Title
-(https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg)] // Thumbnail
-(https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
 
-
+[![Watch the video](https://img.youtube.com/vi/nTQUwghvy5Q/default.jpg)](https://youtu.be/nTQUwghvy5Q)
 ## Quick start for developers
 
 ```
