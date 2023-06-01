@@ -10,7 +10,7 @@ allows users to send and receive messages in real time.
 
 
 ## Demo Video
-[video](https://www.youtube.com/watch?v=uWsxVhqmdYo&t=33s)
+[Watch!](https://www.youtube.com/watch?v=uWsxVhqmdYo&t=33s)
 
 
 ## Quick start for developers
