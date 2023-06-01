@@ -6,8 +6,12 @@
 
 
 Real Time Group chat application is a web based application that
-allows users to register for an account and login into the application.
-users can create and join chat rooms. [Video](https://www.youtube.com/watch?v=uWsxVhqmdYo&t=33s)
+allows users to send and receive messages in real time.
+
+
+## Demo Video
+[video](https://www.youtube.com/watch?v=uWsxVhqmdYo&t=33s)
+
 
 ## Quick start for developers
 
