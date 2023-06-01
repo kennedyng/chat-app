@@ -15,6 +15,8 @@ allows users to send and receive messages in real time.
 
 ## Quick start for developers
 
+The application is created using Vite. to install run the following commands
+
 ```
 npm install
 npm run dev
