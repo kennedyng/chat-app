@@ -196,7 +196,7 @@ const GroupMessagePage = () => {
             },
           }}
         >
-          now
+          new
         </Divider>
         {channelReceivedMessages.map((msg: any) => (
           <React.Fragment key={msg.id}>
