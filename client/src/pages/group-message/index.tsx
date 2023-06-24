@@ -11,7 +11,7 @@ import {
 import { useFormik } from "formik";
 
 import moment from "moment";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -20,9 +20,9 @@ import { addMessage } from "src/api/message";
 import { getUserProfile } from "src/api/user";
 import { Loader } from "src/components/nav/styles";
 import useSocket from "src/hooks/useSocket";
-import { MessageTextField, MessagesContent, SendButton } from "./styles";
-import groupByCreatedTime from "src/utils/groupByCreatedTime";
+import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
+import { MessageTextField, MessagesContent, SendButton } from "./styles";
 
 interface MessageProps {
   User: {
@@ -104,9 +104,6 @@ const GroupMessagePage = () => {
   const channelMessagesQuery = useQuery({
     queryKey: ["channelMsg", { channelId: channel }],
     queryFn: () => getChannelMessages({ roomId: Number(channel ?? 1) }),
-    onSuccess: (data) => {
-      // setChannelReceivedMessages(data);
-    },
   });
 
   useEffect(() => {
@@ -140,11 +137,12 @@ const GroupMessagePage = () => {
 
       messageMutate(body, {
         onError(data) {
-          console.log("eeror", data);
+          console.log("error", data);
         },
       });
 
       sendMessage({
+        id: uuidv4(),
         message,
         roomId: Number(channel ?? 1),
         createdAt: new Date(),
@@ -190,14 +188,18 @@ const GroupMessagePage = () => {
         ))}
 
         <Divider
+          textAlign="left"
           sx={{
             display: channelReceivedMessages.length ? "flex" : "none",
+            "&::before, &::after": {
+              borderColor: "error.main",
+            },
           }}
         >
           now
         </Divider>
         {channelReceivedMessages.map((msg: any) => (
-          <React.Fragment key={msg.createdTime}>
+          <React.Fragment key={msg.id}>
             <MessageRender {...msg} />
           </React.Fragment>
         ))}
