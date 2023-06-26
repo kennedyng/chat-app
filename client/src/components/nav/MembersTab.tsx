@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useDrawer } from "../../context/drawer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { Loader, StyledBadge } from "./styles";
+import { ListContent, Loader, StyledBadge } from "./styles";
 import { useQuery } from "react-query";
 import { getChannelData } from "src/api/channels";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
@@ -63,7 +63,7 @@ const MembersTab = () => {
       {isFetchingChannelData && <Loader color={theme.palette.primary.main} />}
 
       {isSuccess && (
-        <>
+        <ListContent>
           <Box sx={{ px: 2, color: "#E0E0E0" }}>
             <Typography my={2} textTransform="uppercase" fontWeight={700}>
               {channelData.Room?.name}
@@ -102,7 +102,7 @@ const MembersTab = () => {
               ))}
             </List>
           </Box>
-        </>
+        </ListContent>
       )}
     </>
   );
