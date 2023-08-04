@@ -16,6 +16,7 @@ const io = new Server(server, {
       "https://chat-app-production-ba2b.up.railway.app",
       "https://chat-app-g.adaptable.app",
       "https://chat-app-baff.vercel.app",
+      "https://chat-app-wslz.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "PATCH"],
   },
