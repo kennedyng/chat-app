@@ -14,6 +14,7 @@ const io = new Server(server, {
     origin: [
       "http://127.0.0.1:5173",
       "https://chat-app-production-ba2b.up.railway.app",
+      "https://chat-app-g.adaptable.app",
       "https://chat-app-baff.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "PATCH"],
