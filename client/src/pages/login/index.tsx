@@ -1,38 +1,38 @@
 import {
   Alert,
   AlertTitle,
-  Button,
   Collapse,
   Divider,
-  Fade,
   InputAdornment,
   Link as MuiLink,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import GoogleIcon from "@mui/icons-material/Google";
 import LockIcon from "@mui/icons-material/Lock";
 import PersonIcon from "@mui/icons-material/Person";
 import { useFormik } from "formik";
 
-import * as Yup from "yup";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { loginUser } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
+import { useMutation } from "react-query";
+import { loginUser } from "src/api/user";
+import * as Yup from "yup";
 
 import { useAuthUser, useSignIn } from "react-auth-kit";
+import { useErrorBoundary } from "react-error-boundary";
 import { EmailValidation, PasswordValidation } from "src/utils/validation";
-import useSocket from "src/hooks/useSocket";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
 
   const auth = useAuthUser();
+
   const {
     isLoading,
     mutate: loginMutate,
@@ -41,6 +41,11 @@ const LoginPage = () => {
     status,
     error,
   } = useMutation(loginUser, {
+    onError: (err: AxiosError) => {
+      if (err.response?.status !== 403) {
+        showBoundary(err);
+      }
+    },
     onSuccess(data) {
       if (
         signIn({
@@ -51,11 +56,22 @@ const LoginPage = () => {
         })
       ) {
         navigate("/auth/set/profile");
+      } else {
+        showBoundary(new Error("Something went wrong"));
       }
     },
   });
 
-  const userLoginError = error as any;
+  let alertMessage;
+
+  if (error?.response?.status === 403) {
+    alertMessage = (
+      <Alert severity="error">
+        <AlertTitle>Auth Failed</AlertTitle>
+        Invalid Email or Password — <strong>check it out!</strong>
+      </Alert>
+    );
+  }
 
   const handleTesterLogin = () => {
     loginMutate({
@@ -84,12 +100,7 @@ const LoginPage = () => {
         Log In
       </Typography>
 
-      <Collapse in={isError && userLoginError?.response?.status === 403}>
-        <Alert severity="error">
-          <AlertTitle>Auth Failed</AlertTitle>
-          Invalid Email or Password — <strong>check it out!</strong>
-        </Alert>
-      </Collapse>
+      {alertMessage}
 
       <Box component="form" onSubmit={formik.handleSubmit}>
         <TextField
