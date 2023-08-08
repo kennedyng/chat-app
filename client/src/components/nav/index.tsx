@@ -56,9 +56,11 @@ const DraweContent = () => {
   const { getOffline } = useSocket();
   const signOut = useSignOut();
   const auth = useAuthUser();
+
   const handleSignOut = () => {
     setAnchorEl(null);
     signOut();
+    navigate("/auth/login");
 
     // socket io offline
     getOffline(auth()?.id);
