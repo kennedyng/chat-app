@@ -51,7 +51,7 @@ const LoginPage = () => {
         signIn({
           token: data.token,
           tokenType: "Bearer",
-          expiresIn: 36000,
+          expiresIn: 3600,
           authState: { id: data.id },
         })
       ) {

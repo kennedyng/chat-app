@@ -23,6 +23,7 @@ import useSocket from "src/hooks/useSocket";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
 import { MessageTextField, MessagesContent, SendButton } from "./styles";
+import { useErrorBoundary } from "react-error-boundary";
 
 interface MessageProps {
   User: {
@@ -72,7 +73,7 @@ const GroupMessagePage = () => {
   const auth = useAuthUser();
   const { channel } = useParams();
   const messageEndRef = useRef<HTMLDivElement>(null);
-
+  const { showBoundary } = useErrorBoundary();
   const [channelReceivedMessages, setChannelReceivedMessages] = useState<any>(
     []
   );
