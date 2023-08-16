@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Avatar,
   Box,
@@ -7,14 +8,12 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React from "react";
 import { useAuthHeader } from "react-auth-kit";
 import { useQuery } from "react-query";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
-import { HashLoader, PuffLoader } from "react-spinners";
+import { Link, useNavigate } from "react-router-dom";
+import { PuffLoader } from "react-spinners";
 import { API_URL } from "src/api";
 import { getUserProfile } from "src/api/user";
-import CloseIcon from "@mui/icons-material/Close";
 
 const ProfileView = () => {
   const theme = useTheme();
@@ -52,7 +51,7 @@ const ProfileView = () => {
 
         <Avatar
           sx={{ height: 120, width: 120 }}
-          src={`${API_URL}/${userProfileQuery.data?.data?.img_url}`}
+          src={userProfileQuery.data?.data.img_url}
         />
 
         <Typography my={2}>Display Name</Typography>

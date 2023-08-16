@@ -94,7 +94,7 @@ const DraweContent = () => {
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar
                 sx={{ width: "42px", height: "42px" }}
-                src={`${API_URL}/${userProfileQuery.data?.data?.img_url}`}
+                src={userProfileQuery.data?.data?.img_url}
               />
               <Typography
                 fontWeight={700}

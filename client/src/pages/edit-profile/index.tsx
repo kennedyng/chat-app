@@ -3,31 +3,25 @@ import {
   AlertTitle,
   Avatar,
   Box,
-  Button,
   Collapse,
   IconButton,
-  styled,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useState } from "react";
-import ManIcon from "@mui/icons-material/Man";
-import WomanIcon from "@mui/icons-material/Woman";
+import { useState } from "react";
 
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
-import * as Yup from "yup";
-import { NameValidation } from "src/utils/validation";
-import { useMutation, useQuery } from "react-query";
-import { editUserProfile, getUserProfile } from "src/api/user";
 import { LoadingButton } from "@mui/lab";
 import { useAuthHeader } from "react-auth-kit";
-import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
+import { editUserProfile } from "src/api/user";
+import { NameValidation } from "src/utils/validation";
+import * as Yup from "yup";
 
 import CloseIcon from "@mui/icons-material/Close";
 
