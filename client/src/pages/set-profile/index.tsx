@@ -57,7 +57,8 @@ const SetProfilePage = () => {
     maxFiles: 1,
     maxSize: 5000000,
     accept: {
-      "image/png": [".png"],
+      "image/*": [],
+      "image/jpeg": [],
     },
     onDrop: (acceptedFiles) => {
       setProfilePic(
