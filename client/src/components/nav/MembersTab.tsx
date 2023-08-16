@@ -92,7 +92,7 @@ const MembersTab = () => {
                       >
                         <Avatar
                           alt={member.User?.profile?.name}
-                          src={`${API_URL}/${member.User?.profile?.img_url}`}
+                          src={member.User?.profile?.img_url}
                         />
                       </StyledBadge>
                     </ListItemAvatar>
